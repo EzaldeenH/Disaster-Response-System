@@ -1,36 +1,39 @@
-﻿
-using Disaster_Response_System.Data;
+﻿using Disaster_Response_System.Data;
+using Disaster_Response_System.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Disaster_Response_System.Repositories
 {
-    public class SQLDonationRepository : IDonationRepository    
+    public class SQLDonationRepository : IDonationRepository
     {
+        private readonly DisasterResponseSystemDBContext _dbContext;
 
-        private readonly DisasterResponseSystemDBContext _dBContext;
-
-        public SQLDonationRepository( DisasterResponseSystemDBContext _dBContext)
+        public SQLDonationRepository(DisasterResponseSystemDBContext dbContext)
         {
-            this._dBContext = _dBContext;
-        }
-
-
-        public async Task<Donation?> CreateDonationAsync(Donation donation)
-        {
-            await _dBContext.Donations.AddAsync(donation);
-            await _dBContext.SaveChangesAsync();
-
-            return donation;
-        }
-
-        public async Task<Donation?> GetDonationByIdAsync(Guid id)
-        {
-            return await _dBContext.Donations.FirstOrDefaultAsync(x => x.DonationID == id);
+            _dbContext = dbContext;
         }
 
         public async Task<List<Donation>> GetDonationsAsync()
         {
-            return await _dBContext.Donations.ToListAsync();
+            return await _dbContext.Donations
+                .Include(d => d.Donor)
+                .Include(d => d.Round)
+                .ToListAsync();
+        }
+
+        public async Task<Donation?> GetDonationByIdAsync(Guid id)
+        {
+            return await _dbContext.Donations
+                .Include(d => d.Donor)
+                .Include(d => d.Round)
+                .FirstOrDefaultAsync(d => d.DonationID == id);
+        }
+
+        public async Task<Donation?> CreateDonationAsync(Donation donation)
+        {
+            _dbContext.Donations.Add(donation);
+            await _dbContext.SaveChangesAsync();
+            return donation;
         }
     }
 }

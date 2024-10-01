@@ -4,6 +4,7 @@ using Disaster_Response_System.Models.DTO;
 using Disaster_Response_System.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Disaster_Response_System.Controllers
 {
@@ -50,8 +51,21 @@ namespace Disaster_Response_System.Controllers
         public async Task<IActionResult> Create([FromBody] AddRoundDTO roundDTO)
         {
             var roundDomain = mapper.Map<Round>(roundDTO);
-            await roundRepository.CreateRoundAsync(roundDomain);
+            var createdRound = await roundRepository.CreateRoundAsync(roundDomain);
+
+            var unassignedDonations = await _dbContext.Donations
+                .Where(d => d.Round == null)
+                .ToListAsync();
+
+            foreach (var donation in unassignedDonations)
+            {
+                donation.Round = createdRound;
+            }
+
+            await _dbContext.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetById), new { id = roundDomain.RoundID }, mapper.Map<RoundDTO>(roundDomain));
+            
 
         }
 

@@ -5,6 +5,7 @@ using Disaster_Response_System.Models.DTO;
 using Disaster_Response_System.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Disaster_Response_System.Controllers
 {
@@ -51,7 +52,8 @@ namespace Disaster_Response_System.Controllers
         public async Task<IActionResult> Create([FromBody] AddDonationDTO donationDTO)
         {
             var donor = await _dbContext.Donors.FindAsync(donationDTO.Donor);
-            var round = await _dbContext.Rounds.FindAsync(donationDTO.Round);
+            var activeRound = await _dbContext.Rounds.FirstOrDefaultAsync(r => r.RoundActive);
+
 
             if (donor == null)
             {
@@ -62,7 +64,7 @@ namespace Disaster_Response_System.Controllers
             {
                 DonationAmount = donationDTO.DonationAmount,
                 Donor = donor,
-                Round = round,
+                Round = activeRound,
                 DonationDate = DateTime.UtcNow,
             };
 

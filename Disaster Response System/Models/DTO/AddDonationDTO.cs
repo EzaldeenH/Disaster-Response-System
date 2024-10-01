@@ -7,6 +7,5 @@ namespace Disaster_Response_System.Models.DTO
         public decimal DonationAmount { get; set; }
 
         public Guid Donor { get; set; }
-        public Guid? Round { get; set; }
     }
 }
