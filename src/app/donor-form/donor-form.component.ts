@@ -26,13 +26,11 @@ export class DonorFormComponent {
         organization: this.form().value.organization || null, // Optional field
       };
 
-      // Save the donor's name in local storage
-      localStorage.setItem('donorName', donorData.name);
-
       // Post the donor data to the server
       const subscription = this.httpClient.post('https://localhost:7240/api/Donor', donorData).subscribe({
-        next: (response) => {
+        next: (response: any) => {
           console.log('Donor data submitted successfully', response);
+          localStorage.setItem('donorID', response.donorID);
         },
         error: (error) => {
           console.error('Error submitting donor data', error);
