@@ -1,0 +1,19 @@
+<section class="news-events-container">
+  <h2 class="section-title">News & Events</h2>
+  <div class="news-grid">
+    <article *ngFor="let item of newsItems" class="news-item">
+      <div class="news-content">
+        <h3 class="news-title">{{ item.title }}</h3>
+        <time class="news-date">{{ item.date }}</time>
+        <p class="news-description">{{ item.description }}</p>
+        <button
+          class="read-more-btn"
+          [attr.aria-label]="'Read more about ' + item.title"
+        >
+          Read More
+        </button>
+      </div>
+      <img [src]="item.image" [alt]="item.title" class="news-image" />
+    </article>
+  </div>
+</section>
