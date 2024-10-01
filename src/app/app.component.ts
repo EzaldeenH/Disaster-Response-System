@@ -7,11 +7,12 @@ import {DonationComponent} from "./donation/donation.component";
 import {NewsComponent} from "./news/news.component";
 import {FooterComponent} from "./footer/footer.component";
 import {DonorFormComponent} from "./donor-form/donor-form.component";
+import {DonationFormComponent} from "./donation-form/donation-form.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, HeroComponent, FaqComponent, DonationComponent, NewsComponent, FooterComponent, DonorFormComponent],
+  imports: [RouterOutlet, HeaderComponent, HeroComponent, FaqComponent, DonationComponent, NewsComponent, FooterComponent, DonorFormComponent, DonationFormComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

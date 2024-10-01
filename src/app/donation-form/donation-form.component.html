@@ -1,0 +1,37 @@
+<div class="outer-window">
+  <div class="form-container">
+    <div class="form-header">
+      <h2>Donation Amount</h2>
+    </div>
+
+    <form #form="ngForm" class="form-container" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="amount">Amount (USD)</label>
+        <div class="input-container">
+          <span class="currency">$</span>
+          <input type="number"
+                 id="amount"
+                 name="amount"
+                 ngModel
+                 #amount=ngModel
+                 required
+                 min="1"
+                 placeholder="0.00" />
+        </div>
+      </div>
+
+      <div class="submit-btn">
+        <button type="submit" [disabled]="form.invalid">Submit</button>
+      </div>
+
+      @if (amount.touched && amount.invalid && amount.dirty)
+      {
+        <div class="error">
+          Amount is required
+        </div>
+      }
+
+    </form>
+  </div>
+</div>
