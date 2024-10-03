@@ -1,6 +1,7 @@
 import {Component, DestroyRef, inject, viewChild} from '@angular/core';
 import {FormsModule, NgForm} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-donation-form',
@@ -16,6 +17,8 @@ export class DonationFormComponent {
   private form = viewChild.required<NgForm>('form');
   private httpClient = inject(HttpClient);
 
+  constructor(private router: Router) {}
+
   onSubmit() {
     if (this.form().valid) {
       const donationData = {
@@ -27,6 +30,7 @@ export class DonationFormComponent {
       const subscription = this.httpClient.post('https://localhost:7240/api/Donation', donationData).subscribe({
         next: (response) => {
           console.log('Donation data submitted successfully', response);
+          this.router.navigate(['/']);
         },
         error: (error) => {
           console.error('Error submitting donation data', error);
@@ -37,5 +41,10 @@ export class DonationFormComponent {
         subscription.unsubscribe();
       });
     }
+
+  }
+
+  onCancel() {
+    this.router.navigate(['/']);
   }
 }

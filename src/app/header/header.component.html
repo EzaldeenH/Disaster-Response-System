@@ -14,6 +14,7 @@
         <a href="#" class="nav-link">Home</a>
         <div class="active-indicator"></div>
       </li>
+      <li class="nav-item"><a href="#" class="nav-link">Review request</a></li>
       <li class="nav-item"><a href="#" class="nav-link">About Us</a></li>
       <li class="nav-item"><a href="#" class="nav-link">Blog</a></li>
       <li class="nav-item"><a href="#" class="nav-link">Contact Us</a></li>
@@ -21,6 +22,6 @@
   </nav>
   <div class="cta-container">
     <a href="#" class="cta-button outline">Get Help</a>
-    <a href="#" class="cta-button solid">Donate Now</a>
+    <a [routerLink]="donationLink" href="#" class="cta-button solid">Donate Now</a>
   </div>
 </header>

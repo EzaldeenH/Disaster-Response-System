@@ -1,30 +1,30 @@
 .hero-overlay {
-  background-color: rgba(23, 26, 31, 0.4);
   display: flex;
-  width: 100%;
-  align-items: center;
   justify-content: center;
-  padding: 210px 80px;
-  border: 1px solid transparent;
+  align-items: center;
+  height: 100vh; /* Adjust as needed */
+  background-image: url('../../assets/aid-worker-security-timeline-final.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .hero-content {
   display: flex;
-  width: 938px;
-  max-width: 100%;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 }
 
 .hero-title {
-  text-align: center;
   font: 700 64px/1 Archivo, sans-serif;
+  color: #636ae8; /* Change text color to white */
 }
 
 .hero-description {
   font-size: 24px;
-  text-align: center;
   margin-top: 24px;
+  color: #ffffff; /* Change text color to white */
 }
 
 .cta-button {
@@ -40,6 +40,7 @@
   border: 1px solid transparent;
   text-decoration: none;
   transition: background-color 0.3s, color 0.3s;
+  color: #ffffff; /* Change button text color to white */
 }
 
 .cta-button:hover {

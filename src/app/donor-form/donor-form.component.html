@@ -1,6 +1,6 @@
 <!-- donor-form.component.html -->
-<div class="outer-window">
-  <div class="form-container">
+<div class="backdrop" (click)="onCancel()">
+  <div class="form-container" (click)="$event.stopPropagation()">
     <div class="form-header">
       <h2>Donor Registration</h2>
     </div>

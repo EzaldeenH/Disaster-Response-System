@@ -1,5 +1,4 @@
-/* Styles for the outer window */
-
+/* Styles for the backdrop */
 .backdrop {
   background-color: rgba(0, 0, 0, 0.9);
   position: fixed;
@@ -7,101 +6,126 @@
   left: 0;
   width: 100%;
   height: 100vh;
+  z-index: 999; /* Ensure it's above other components */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.outer-window {
-  background-color: white; /* Light background for contrast */
-  border-radius: 10px; /* Rounded corners for the window */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-  padding: 30px; /* Padding around the inner form */
-  max-width: 500px; /* Maximum width of the window */
-  margin: 20px auto; /* Centering */
-}
-
-/* Styles for the form container */
+/* Styles for the form container (dialog) */
 .form-container {
-  background-color: white; /* White background for the form */
-  border-radius: 10px; /* Slightly rounded corners */
-  padding: 20px; /* Padding for the form */
-  display: flex; /* Flex layout for better structure */
-  flex-direction: column; /* Vertical alignment of child elements */
-}
-
-/* Styles for the form header */
-.form-header {
-  text-align: center;
-  margin-bottom: 20px; /* Space below the header */
-}
-
-/* Styles for h2 */
-.form-header h2 {
-  font-size: 24px; /* Larger font size for emphasis */
-  color: #636ae8; /* Primary color */
-}
-
-/* Styles for form groups */
-.form-group {
-  margin-bottom: 15px; /* Space between fields */
-}
-
-/* Styles for labels */
-label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 5px;
-  color: #333; /* Darker text for readability */
-}
-
-/* Styles for input fields */
-input[type="text"] {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none; /* Remove default dialog border */
+  z-index: 1001; /* Ensure it's on top of the backdrop */
+  max-width: 400px;
   width: 100%;
-  padding: 12px; /* Padding for comfort */
-  border: 2px solid #ccc; /* Border color */
-  border-radius: 6px; /* Rounded corners */
-  font-size: 16px; /* Font size */
-  transition: border-color 0.3s;
 }
 
-/* Input field focus state */
-input[type="text"]:focus {
-  border-color: #636ae8; /* Focus color */
-  outline: none; /* Remove outline */
-}
-
-/* Input field invalid state */
-input[type="text"].ng-invalid.ng-dirty {
-  border-color: red; /* Red border for invalid inputs */
-}
-
-/* Styles for the submit button */
-.submit-btn {
+.form-header h2 {
   text-align: center;
+  color: #4a4a4a;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: bold;
 }
 
-button[type="submit"] {
-  background-color: #636ae8; /* Button color */
+/* Form group */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Label styling */
+.form-group label {
+  display: block;
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+/* Input container for currency symbol */
+.input-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Currency symbol styling */
+.currency {
+  position: absolute;
+  left: 10px;
+  font-size: 1.1rem;
+  color: #636ae8;
+  font-weight: bold;
+}
+
+/* Input styling */
+.form-group input {
+  width: 100%;
+  padding: 10px 15px;
+  padding-left: 30px; /* Padding left for the currency symbol */
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+/* Focus state */
+.form-group input:focus {
+  border-color: #636ae8;
+}
+
+/* Submit button */
+.submit-btn button {
+  width: 100%;
+  padding: 12px 0;
+  font-size: 1.2rem;
+  font-weight: bold;
   color: white;
+  background-color: #636ae8;
   border: none;
-  border-radius: 6px; /* Rounded corners */
-  padding: 12px 20px; /* Padding for comfort */
-  font-size: 18px; /* Larger font size */
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
-  width: 100%; /* Full-width button */
+  transition: background-color 0.3s ease;
 }
 
-button[type="submit"]:hover {
-  background-color: #4f58c4; /* Darker on hover */
+/* Hover effect */
+.submit-btn button:hover {
+  background-color: #4b56c4;
 }
 
-button[type="submit"]:disabled {
-  background-color: #ccc; /* Disabled state */
+/* Disabled button state */
+.submit-btn button:disabled {
+  background-color: #bfbfbf;
   cursor: not-allowed;
 }
 
-/* Styles for error messages */
+/* Error message styling */
 .error {
   color: red;
-  font-size: 14px; /* Error message font size */
   margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+/* Media query for mobile responsiveness */
+@media (max-width: 768px) {
+  dialog.form-container {
+    padding: 15px;
+  }
+
+  .form-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .form-group input {
+    font-size: 0.9rem;
+  }
+
+  .submit-btn button {
+    font-size: 1.1rem;
+  }
 }

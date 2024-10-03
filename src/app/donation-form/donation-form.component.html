@@ -1,5 +1,5 @@
-<div class="outer-window">
-  <div class="form-container">
+<div class="backdrop" (click)="onCancel()">
+  <div class="form-container" (click)="$event.stopPropagation()">
     <div class="form-header">
       <h2>Donation Amount</h2>
     </div>
@@ -14,7 +14,7 @@
                  id="amount"
                  name="amount"
                  ngModel
-                 #amount=ngModel
+                 #amount="ngModel"
                  required
                  min="1"
                  placeholder="0.00" />
