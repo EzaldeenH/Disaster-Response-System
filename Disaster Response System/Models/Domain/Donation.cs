@@ -10,6 +10,6 @@ public class Donation
     public DateTime DonationDate { get; set; }
 
     // Navigation properties
-    public Donor Donor { get; set; }
-    public Round? Round { get; set; }
+    public virtual Donor Donor { get; set; }
+    public virtual Round? Round { get; set; }
 }

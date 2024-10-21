@@ -4,6 +4,7 @@ using Disaster_Response_System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Disaster_Response_System.Migrations
 {
     [DbContext(typeof(DisasterResponseSystemDBContext))]
-    partial class DisasterResponseSystemDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241019004414_lazy-loading")]
+    partial class lazyloading
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace Disaster_Response_System.Migrations
 
                     b.HasKey("DonorID");
 
-                    b.ToTable("Donors", (string)null);
+                    b.ToTable("Donors");
                 });
 
             modelBuilder.Entity("Donation", b =>
@@ -67,7 +70,7 @@ namespace Disaster_Response_System.Migrations
 
                     b.HasIndex("RoundID");
 
-                    b.ToTable("Donations", (string)null);
+                    b.ToTable("Donations");
                 });
 
             modelBuilder.Entity("Request", b =>
@@ -76,13 +79,6 @@ namespace Disaster_Response_System.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("AllocatedFunds")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ApplicantContact")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ApplicantName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -90,7 +86,7 @@ namespace Disaster_Response_System.Migrations
                     b.Property<decimal>("EvaluationScore")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<bool>("RequestActive")
+                    b.Property<bool>("RequestComplete")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("RoundID")
@@ -103,7 +99,7 @@ namespace Disaster_Response_System.Migrations
 
                     b.HasIndex("RoundID");
 
-                    b.ToTable("Requests", (string)null);
+                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("Round", b =>
@@ -124,7 +120,7 @@ namespace Disaster_Response_System.Migrations
 
                     b.HasKey("RoundID");
 
-                    b.ToTable("Rounds", (string)null);
+                    b.ToTable("Rounds");
                 });
 
             modelBuilder.Entity("Donation", b =>

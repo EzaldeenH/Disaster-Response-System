@@ -8,6 +8,6 @@ namespace Disaster_Response_System.Models.Domain
         public string Name { get; set; }
         public string? Organization { get; set; }
 
-        public ICollection<Donation> Donations { get; set; }
+        public virtual ICollection<Donation> Donations { get; set; }
     }
 }

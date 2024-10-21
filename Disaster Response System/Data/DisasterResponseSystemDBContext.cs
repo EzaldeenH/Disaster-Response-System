@@ -14,6 +14,11 @@ namespace Disaster_Response_System.Data
         public DbSet<Request> Requests { get; set; }
         public DbSet<Round> Rounds { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+        }
+
     }
 
 

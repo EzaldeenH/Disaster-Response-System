@@ -5,6 +5,6 @@
     public bool RoundActive { get; set; }         
     public DateTime StartDate { get; set; }                  
 
-    public ICollection<Request> Requests { get; set; }
-    public ICollection<Donation> Donations { get; set; }
+    public virtual ICollection<Request> Requests { get; set; }
+    public virtual ICollection<Donation> Donations { get; set; }
 }

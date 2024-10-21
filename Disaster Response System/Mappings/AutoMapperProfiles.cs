@@ -13,6 +13,8 @@ namespace Disaster_Response_System.Mappings
             CreateMap<AddDonationDTO, Donation>().ReverseMap();
             CreateMap<Round, RoundDTO>().ReverseMap();
             CreateMap<AddRoundDTO, Round>().ReverseMap();
+            CreateMap<Request, RequestDTO>().ReverseMap();
+            CreateMap<RequestForm, RequestFormDTO>().ReverseMap();
         }
     }
 }

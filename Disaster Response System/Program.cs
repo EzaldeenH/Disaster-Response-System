@@ -1,6 +1,7 @@
 using Disaster_Response_System.Data;
 using Disaster_Response_System.Mappings;
 using Disaster_Response_System.Repositories;
+using Disaster_Response_System.Services; // Add this line to include the services namespace
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -13,14 +14,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Injecting DB Context
+// Injecting DB Context with Lazy Loading Proxies
 builder.Services.AddDbContext<DisasterResponseSystemDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DisasterResponseSystemDBContext")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DisasterResponseSystemDBContext"))
+           .UseLazyLoadingProxies());
 
 // Inject our Repositories
 builder.Services.AddScoped<IDonationRepository, SQLDonationRepository>();
 builder.Services.AddScoped<IDonorRepository, SQLDonorRepository>();
 builder.Services.AddScoped<IRoundRepository, SQLRoundRepository>();
+
+// Inject our Generic Repository
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+// Inject our Services
+builder.Services.AddScoped<EvaluationService>();
+builder.Services.AddScoped<DistributeFundsService>();
 
 // Inject our automapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
@@ -28,7 +37,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
     });
 
 builder.Services.AddCors(options =>
