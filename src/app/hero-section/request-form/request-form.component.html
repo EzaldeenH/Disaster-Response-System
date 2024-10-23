@@ -1,0 +1,152 @@
+<form #form="ngForm" (ngSubmit)="onSubmit()">
+  <!-- Name -->
+  <label for="Name">Full Name</label>
+  <input type="text"
+         id="Name"
+         name="Name"
+         ngModel
+         #Name="ngModel"
+         required
+         minlength="3"
+         placeholder="Enter your full name" />
+  @if (Name.invalid && (Name.dirty || Name.touched)) {
+    <div>Name is required.</div>
+    <div>Name can't be less than 3 characters.</div>
+  }
+
+  <!-- Adults Count -->
+  <label for="AdultCount">Number of Healthy Adults in the Household</label>
+  <input type="number"
+         id="AdultCount"
+         name="AdultCount"
+         ngModel
+         #AdultCount="ngModel"
+         required
+         min="1"
+         max="10"
+         placeholder="Enter the number of adults" />
+  @if (AdultCount.invalid && (AdultCount.dirty || AdultCount.touched)) {
+    <div>Adult count is required.</div>
+    <div>Adult number must be between 1 and 10.</div>
+    <div>Adult number must be between 1 and 10.</div>
+  }
+
+  <!-- Children Count -->
+  <label for="ChildCount">Number of Children in the Household</label>
+  <input type="number"
+         id="ChildCount"
+         name="ChildCount"
+         ngModel
+         #ChildCount="ngModel"
+         required
+         min="0"
+         max="10"
+         placeholder="Enter the number of children" />
+  @if (ChildCount.invalid && (ChildCount.dirty || ChildCount.touched)) {
+    <div>Child count is required.</div>
+    <div>Child number must be between 0 and 10.</div>
+    <div>Child number must be between 0 and 10.</div>
+  }
+
+  <!-- Elderly Count -->
+  <label for="ElderlyCount">Number of Elderly in the Household</label>
+  <input type="number"
+         id="ElderlyCount"
+         name="ElderlyCount"
+         ngModel
+         #ElderlyCount="ngModel"
+         required
+         min="0"
+         max="10"
+         placeholder="Enter the number of elderly" />
+  @if (ElderlyCount.invalid && (ElderlyCount.dirty || ElderlyCount.touched)) {
+    <div>Elderly count is required.</div>
+    <div>Elderly number must be between 0 and 10.</div>
+    <div>Elderly number must be between 0 and 10.</div>
+  }
+
+  <!-- Disabilities or Medical Conditions -->
+  <label for="DisabilityCount">Number of People with Disabilities or Severe Medical Conditions</label>
+  <input type="number"
+         id="DisabilityCount"
+         name="DisabilityCount"
+         ngModel
+         #DisabilityCount="ngModel"
+         required
+         min="0"
+         max="10"
+         placeholder="Enter the number of people with disabilities" />
+  @if (DisabilityCount.invalid && (DisabilityCount.dirty || DisabilityCount.touched)) {
+    <div>Disability count is required.</div>
+    <div>Disability number must be between 0 and 10.</div>
+    <div>Disability number must be between 0 and 10.</div>
+  }
+
+  <!-- Housing Status -->
+  <label for="HousingStatus">Current Housing Situation</label>
+  <select id="HousingStatus"
+          name="HousingStatus"
+          ngModel
+          #HousingStatus="ngModel"
+          required>
+    <option value="intact">House intact, but experiencing financial difficulties</option>
+    <option value="damaged">House damaged, but inhabitable</option>
+    <option value="uninhabitable">House destroyed or uninhabitable</option>
+    <option value="homeless">Homeless</option>
+  </select>
+  @if (HousingStatus.invalid && (HousingStatus.dirty || HousingStatus.touched)) {
+    <div>Housing status is required.</div>
+  }
+
+  <!-- Access to Basic Needs -->
+  <label>Do you have access to basic needs (food, water, electricity)?</label>
+  <div class="radio-group">
+    <label>
+      Yes
+      <input type="radio" name="BasicNeedsAccess" ngModel required value="true">
+    </label>
+    <label>
+      No
+      <input type="radio" name="BasicNeedsAccess" ngModel required value="false">
+    </label>
+  </div>
+  @if (form.controls.BasicNeedsAccess?.invalid && (form.controls.BasicNeedsAccess?.dirty)) {
+    <div >Basic needs access is required.</div>
+  }
+
+  <!-- Urgent Medical Needs -->
+  <label>Do any family members have urgent medical needs?</label>
+  <div class="radio-group">
+    <label>
+      Yes
+      <input type="radio" name="MedicalNeeds" ngModel required value="true">
+    </label>
+    <label>
+      No
+      <input type="radio" name="MedicalNeeds" ngModel required value="false">
+    </label>
+  </div>
+  @if (form.controls.MedicalNeeds?.invalid && (form.controls.MedicalNeeds?.dirty)) {
+    <div>Medical needs is required.</div>
+  }
+
+  <!-- Urgency of Need -->
+  <label>Do you need the funds for urgent needs (e.g., medical emergencies)?</label>
+  <div class="radio-group">
+    <label>
+      Yes
+      <input type="radio" name="Urgency" ngModel required value="true">
+    </label>
+    <label>
+      No
+      <input type="radio" name="Urgency" ngModel required value="false">
+    </label>
+  </div>
+  @if (form.controls.Urgency?.invalid && (form.controls.Urgency?.dirty)) {
+    <div>Urgency is required.</div>
+  }
+
+  <!-- Form Submission -->
+  <button type="submit" [disabled]="!form.form.valid">Submit</button>
+  <button type="button" (click)="onCancel()">Cancel</button>
+</form>
