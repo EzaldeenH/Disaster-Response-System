@@ -1,12 +1,16 @@
 .header {
-  background-color: #fff;
-  box-shadow: 0 0 2px rgba(23, 26, 31, 0.12);
   display: flex;
-  width: 100%;
-  gap: 20px;
   justify-content: space-between;
-  padding: 2px 24px;
   align-items: center;
+  padding: 2px 24px;
+  height: 60px; /* Adjust height as needed */
+  width: 100%;
+  position: static;
+  top: 0;
+  left: 0;
+  background-color: #fff; /* Ensure background color is set */
+  z-index: 1000; /* Ensure it stays on top */
+  border-bottom: 1px whitesmoke ;
 }
 
 .logo-container {

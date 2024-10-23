@@ -5,6 +5,6 @@
       Your generous contribution helps us provide essential resources and
       support to those in need. Join us in making a difference today.
     </p>
-    <button [routerLink]="link" class="donate-button">Donate</button>
+    <button [routerLink]="[{ outlets: { popup: link } }]" class="donate-button">Donate</button>
   </div>
 </section>

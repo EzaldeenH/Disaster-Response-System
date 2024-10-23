@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {DonationFormComponent} from "../donation-form/donation-form.component";
+import {Component, OnInit, output} from '@angular/core';
+import {DonationFormComponent} from "./donation-form/donation-form.component";
 import {RouterLink} from "@angular/router";
 
 @Component({
@@ -14,16 +14,20 @@ import {RouterLink} from "@angular/router";
 })
 export class DonationComponent implements OnInit {
   link = '';
+  test = output<null>();
 
   ngOnInit() {
     const donorID = localStorage.getItem('donorID');
 
     if (donorID) {
-      this.link = "/donation-form";
+      this.link = "donation-form";
     }
     else {
-      this.link = "/donor-registration";
+      this.link = "donor-registration";
     }
   }
 
+  onDonation() {
+    this.test.emit(null);
+  }
 }

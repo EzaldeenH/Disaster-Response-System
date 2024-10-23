@@ -1,4 +1,4 @@
-/* Styles for the backdrop */
+
 .backdrop {
   background-color: rgba(0, 0, 0, 0.9);
   position: fixed;
@@ -6,20 +6,20 @@
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 999; /* Ensure it's above other components */
+  z-index: 999;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Styles for the form container (dialog) */
+
 .form-container {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: none; /* Remove default dialog border */
-  z-index: 1001; /* Ensure it's on top of the backdrop */
+  border: none;
+  z-index: 1001;
   max-width: 400px;
   width: 100%;
 }
@@ -32,12 +32,12 @@
   font-weight: bold;
 }
 
-/* Form group */
+
 .form-group {
   margin-bottom: 15px;
 }
 
-/* Label styling */
+
 .form-group label {
   display: block;
   font-size: 1.1rem;
@@ -46,15 +46,14 @@
   font-weight: 500;
 }
 
-/* Input container for currency symbol */
+
 .input-container {
   display: flex;
   align-items: center;
   position: relative;
 }
 
-/* Currency symbol styling */
-.currency {
+currency {
   position: absolute;
   left: 10px;
   font-size: 1.1rem;
@@ -62,11 +61,11 @@
   font-weight: bold;
 }
 
-/* Input styling */
+
 .form-group input {
   width: 100%;
   padding: 10px 15px;
-  padding-left: 30px; /* Padding left for the currency symbol */
+  padding-left: 30px;
   font-size: 1rem;
   border: 2px solid #ccc;
   border-radius: 4px;
@@ -74,12 +73,12 @@
   transition: border-color 0.3s ease;
 }
 
-/* Focus state */
+
 .form-group input:focus {
   border-color: #636ae8;
 }
 
-/* Submit button */
+
 .submit-btn button {
   width: 100%;
   padding: 12px 0;
@@ -93,25 +92,25 @@
   transition: background-color 0.3s ease;
 }
 
-/* Hover effect */
+
 .submit-btn button:hover {
   background-color: #4b56c4;
 }
 
-/* Disabled button state */
+
 .submit-btn button:disabled {
   background-color: #bfbfbf;
   cursor: not-allowed;
 }
 
-/* Error message styling */
+
 .error {
   color: red;
   margin-top: 5px;
   font-size: 0.9rem;
 }
 
-/* Media query for mobile responsiveness */
+
 @media (max-width: 768px) {
   dialog.form-container {
     padding: 15px;
