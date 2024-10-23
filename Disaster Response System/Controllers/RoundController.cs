@@ -52,10 +52,17 @@ namespace Disaster_Response_System.Controllers
         public async Task<IActionResult> Create([FromBody] AddRoundDTO roundDTO)
         {
             var round = mapper.Map<Round>(roundDTO);
+            var activeRound = await _dbContext.Rounds.FirstOrDefaultAsync(x => x.RoundActive == true);
+
+            if (activeRound != null)
+            {
+                return BadRequest("Active round exists, consider closing it before making a new one.");
+            }
+
             await roundRepository.CreateAsync(round);
 
             var donations = await donationRepository.GetAllAsync();
-            var nonActiveDonations = donations.Where(d => d.RoundID == null || !_dbContext.Rounds.Any(r => r.RoundID == d.RoundID && r.RoundActive)).ToList();
+            var nonActiveDonations = donations.Where(d => d.RoundID == null).ToList();
 
             foreach (var donation in nonActiveDonations)
             {
@@ -69,7 +76,7 @@ namespace Disaster_Response_System.Controllers
         [HttpPut]
         [Route("{id:guid}")]
         [ValidateModel]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] RoundStatusDTO roundDTO)
+        public async Task<IActionResult> Update([FromRoute] Guid id)
         {
             var round = await roundRepository.GetByIdAsync(id);
 
@@ -78,7 +85,7 @@ namespace Disaster_Response_System.Controllers
                 return NotFound();
             }
 
-            round.RoundActive = roundDTO.RoundActive;
+            round.RoundActive = false;
 
             await roundRepository.UpdateAsync(round);
 
@@ -90,11 +97,12 @@ namespace Disaster_Response_System.Controllers
 
 
         [HttpPost("{roundId}/distribute-funds")]
-        public async Task<IActionResult> DistributeFunds(Guid roundId)
+        public async Task<IActionResult> DistributeFundsTest(Guid roundId)
         {
             try
             {
-                var round = await roundRepository.GetByIdAsync(roundId); // Assuming you have a method to get the round
+                var round = await roundRepository.GetByIdAsync(roundId);
+
                 if (round == null)
                 {
                     return NotFound();

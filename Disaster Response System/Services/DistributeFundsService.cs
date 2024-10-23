@@ -27,15 +27,15 @@ namespace Disaster_Response_System.Services
 
             // Step 2: Calculate the total evaluation score for all requests that are not active
             decimal totalEvaluationScore = round.Requests
-                .Where(r => r.RequestActive)
+                .Where(r => r.RequestActive == true)
                 .Sum(r => r.EvaluationScore);
 
             // Step 3: Distribute the funds proportionally based on the evaluation score of each active and incomplete request
             foreach (var request in round.Requests)
             {
-                if (request.RequestActive && totalEvaluationScore > 0)
+                if (request.RequestActive == true && totalEvaluationScore > 0)
                 {
-                    request.AllocatedFunds = (request.EvaluationScore / totalEvaluationScore) * totalDonations;
+                    request.AllocatedFunds = Math.Round(request.EvaluationScore / totalEvaluationScore) * totalDonations;
                 }
                 else
                 {
