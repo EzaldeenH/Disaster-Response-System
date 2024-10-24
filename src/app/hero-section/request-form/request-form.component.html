@@ -10,8 +10,8 @@
          minlength="3"
          placeholder="Enter your full name" />
   @if (Name.invalid && (Name.dirty || Name.touched)) {
-    <div>Name is required.</div>
-    <div>Name can't be less than 3 characters.</div>
+    <div class="error">Name is required.</div>
+    <div class="error">Name can't be less than 3 characters.</div>
   }
 
   <!-- Adults Count -->
@@ -26,9 +26,8 @@
          max="10"
          placeholder="Enter the number of adults" />
   @if (AdultCount.invalid && (AdultCount.dirty || AdultCount.touched)) {
-    <div>Adult count is required.</div>
-    <div>Adult number must be between 1 and 10.</div>
-    <div>Adult number must be between 1 and 10.</div>
+    <div class="error">Adult count is required.</div>
+    <div class="error">Adult number must be between 1 and 10.</div>
   }
 
   <!-- Children Count -->
@@ -43,9 +42,8 @@
          max="10"
          placeholder="Enter the number of children" />
   @if (ChildCount.invalid && (ChildCount.dirty || ChildCount.touched)) {
-    <div>Child count is required.</div>
-    <div>Child number must be between 0 and 10.</div>
-    <div>Child number must be between 0 and 10.</div>
+    <div class="error">Child count is required.</div>
+    <div class="error">Child number must be between 0 and 10.</div>
   }
 
   <!-- Elderly Count -->
@@ -60,9 +58,8 @@
          max="10"
          placeholder="Enter the number of elderly" />
   @if (ElderlyCount.invalid && (ElderlyCount.dirty || ElderlyCount.touched)) {
-    <div>Elderly count is required.</div>
-    <div>Elderly number must be between 0 and 10.</div>
-    <div>Elderly number must be between 0 and 10.</div>
+    <div class="error">Elderly count is required.</div>
+    <div class="error">Elderly number must be between 0 and 10.</div>
   }
 
   <!-- Disabilities or Medical Conditions -->
@@ -77,9 +74,8 @@
          max="10"
          placeholder="Enter the number of people with disabilities" />
   @if (DisabilityCount.invalid && (DisabilityCount.dirty || DisabilityCount.touched)) {
-    <div>Disability count is required.</div>
-    <div>Disability number must be between 0 and 10.</div>
-    <div>Disability number must be between 0 and 10.</div>
+    <div class="error">Disability count is required.</div>
+    <div class="error">Disability number must be between 0 and 10.</div>
   }
 
   <!-- Housing Status -->
@@ -95,7 +91,7 @@
     <option value="homeless">Homeless</option>
   </select>
   @if (HousingStatus.invalid && (HousingStatus.dirty || HousingStatus.touched)) {
-    <div>Housing status is required.</div>
+    <div class="error">Housing status is required.</div>
   }
 
   <!-- Access to Basic Needs -->
@@ -103,15 +99,15 @@
   <div class="radio-group">
     <label>
       Yes
-      <input type="radio" name="BasicNeedsAccess" ngModel required value="true">
+      <input type="radio" name="BasicNeedsAccess" #BasicNeeds="ngModel" ngModel required value="true">
     </label>
     <label>
       No
-      <input type="radio" name="BasicNeedsAccess" ngModel required value="false">
+      <input type="radio" name="BasicNeedsAccess" #BasicNeeds="ngModel" ngModel required value="false">
     </label>
   </div>
-  @if (form.controls.BasicNeedsAccess?.invalid && (form.controls.BasicNeedsAccess?.dirty)) {
-    <div >Basic needs access is required.</div>
+  @if (BasicNeeds.invalid && BasicNeeds.dirty) {
+    <div class="error">Basic needs access is required.</div>
   }
 
   <!-- Urgent Medical Needs -->
@@ -119,15 +115,15 @@
   <div class="radio-group">
     <label>
       Yes
-      <input type="radio" name="MedicalNeeds" ngModel required value="true">
+      <input type="radio" name="MedicalNeeds" #MedicalNeeds="ngModel" ngModel required value="true">
     </label>
     <label>
       No
-      <input type="radio" name="MedicalNeeds" ngModel required value="false">
+      <input type="radio" name="MedicalNeeds" #MedicalNeeds="ngModel" ngModel required value="false">
     </label>
   </div>
-  @if (form.controls.MedicalNeeds?.invalid && (form.controls.MedicalNeeds?.dirty)) {
-    <div>Medical needs is required.</div>
+  @if (MedicalNeeds.invalid && MedicalNeeds.dirty) {
+    <div class="error">Medical needs is required.</div>
   }
 
   <!-- Urgency of Need -->
@@ -135,18 +131,18 @@
   <div class="radio-group">
     <label>
       Yes
-      <input type="radio" name="Urgency" ngModel required value="true">
+      <input type="radio" name="Urgency" #Urgency="ngModel" ngModel required value="true">
     </label>
     <label>
       No
-      <input type="radio" name="Urgency" ngModel required value="false">
+      <input type="radio" name="Urgency" #Urgency="ngModel" ngModel required value="false">
     </label>
   </div>
-  @if (form.controls.Urgency?.invalid && (form.controls.Urgency?.dirty)) {
-    <div>Urgency is required.</div>
+  @if (Urgency.invalid && Urgency.dirty) {
+    <div class="error">Urgency is required.</div>
   }
 
   <!-- Form Submission -->
-  <button type="submit" [disabled]="!form.form.valid">Submit</button>
+  <button type="submit" [disabled]="form.form.invalid || form.pristine">Submit</button>
   <button type="button" (click)="onCancel()">Cancel</button>
 </form>

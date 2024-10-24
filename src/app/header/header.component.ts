@@ -17,10 +17,10 @@ export class HeaderComponent implements OnInit {
     const donorID = localStorage.getItem('donorID');
 
     if (donorID) {
-      this.donationLink = "/donation-form";
+      this.donationLink = "donation-form";
     }
     else {
-      this.donationLink = "/donor-registration";
+      this.donationLink = "donor-registration";
     }
   }
 

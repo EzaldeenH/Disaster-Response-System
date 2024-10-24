@@ -1,6 +1,7 @@
-import {afterNextRender, Component, inject, OnInit, output, viewChild} from '@angular/core';
+import { Component, inject, OnInit, output, viewChild} from '@angular/core';
 import {FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
+import {from} from "rxjs";
 
 @Component({
   selector: 'app-request-form',
@@ -19,25 +20,30 @@ export class RequestFormComponent implements OnInit {
   private previousRequestID : string | null = null;
 
   ngOnInit() {
-    afterNextRender(() => {
-      this.previousRequestID = window.localStorage.getItem('requestID');
-    })
+    this.previousRequestID = window.localStorage.getItem('requestID');
   }
+
 
   onSubmit() {
     if (this.form().valid && !this.previousRequestID) {
-      const requestData = this.form().value;
+      const requestData =  {
+        ...this.form().value,
+        BasicNeedsAccess: this.form().value.BasicNeedsAccess === 'true', // Convert to boolean
+        MedicalNeeds: this.form().value.MedicalNeeds === 'true', // Convert to boolean
+        Urgency: this.form().value.Urgency === 'true', // Convert to boolean
+      }
 
       this.httpClient.post('https://localhost:7240/api/Request', requestData).subscribe({
         next: (response: any) => {
           console.log('Request data submitted successfully', response);
-          window.localStorage.setItem('requestID', response.RequestID);
+          window.localStorage.setItem('requestID', response.requestID);
         },
         error: (error) => {
           console.error('Error submitting request data', error);
+          console.log(requestData);
         },
       });
-
+      console.log(requestData);
       this.onRequestFinished.emit();
     }
   }
@@ -45,5 +51,7 @@ export class RequestFormComponent implements OnInit {
   onCancel() {
     this.onRequestFinished.emit();
   }
+
+  protected readonly from = from;
 }
 

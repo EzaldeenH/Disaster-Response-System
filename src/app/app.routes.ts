@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import {DonorFormComponent} from "./donation/donor-form/donor-form.component";
 import {DonationFormComponent} from "./donation/donation-form/donation-form.component";
-import {RequestFormComponent} from "./hero-section/request-form/request-form.component";
+import {RequestStatusComponent} from "./header/request-status/request-status.component";
 
 export const routes: Routes = [
   {
@@ -15,7 +15,8 @@ export const routes: Routes = [
     outlet: 'popup'
   },
   {
-    path: 'request-form',
-    component: RequestFormComponent
+    path: 'request-status',
+    component:RequestStatusComponent,
+    outlet: 'popup'
   }
 ];

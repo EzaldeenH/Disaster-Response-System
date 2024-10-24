@@ -1,0 +1,18 @@
+<div class="backdrop" (click)="onCancel()">
+  <div class="container">
+    <div>
+      <h2>Request Status</h2>
+      <span>{{ requestID }}</span>
+      <span class="status">{{ status() }}</span>
+    </div>
+
+    @if (status == null)
+    {
+      <span class="error" >{{ error }}</span>
+      }
+
+    <div class="ok-btn">
+      <button type="button" (click)="onOk()">OK</button>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import {Component, OnInit, output} from '@angular/core';
+import {AfterViewInit, Component, output} from '@angular/core';
 import {DonationFormComponent} from "./donation-form/donation-form.component";
 import {RouterLink} from "@angular/router";
 
@@ -12,11 +12,11 @@ import {RouterLink} from "@angular/router";
   templateUrl: './donation.component.html',
   styleUrl: './donation.component.css'
 })
-export class DonationComponent implements OnInit {
+export class DonationComponent implements AfterViewInit {
   link = '';
   test = output<null>();
 
-  ngOnInit() {
+  ngAfterViewInit() {
     const donorID = localStorage.getItem('donorID');
 
     if (donorID) {
