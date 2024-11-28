@@ -12,15 +12,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Disaster_Response_System.Migrations
 {
     [DbContext(typeof(DisasterResponseSystemDBContext))]
-    [Migration("20240930042045_Update3")]
-    partial class Update3
+    [Migration("20241127232313_Setup")]
+    partial class Setup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -31,16 +34,11 @@ namespace Disaster_Response_System.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ContactInformation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Organization")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DonorID");
@@ -63,7 +61,7 @@ namespace Disaster_Response_System.Migrations
                     b.Property<Guid>("DonorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("RoundID")
+                    b.Property<Guid?>("RoundID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("DonationID");
@@ -81,9 +79,8 @@ namespace Disaster_Response_System.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ApplicantContact")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("AllocatedFunds")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ApplicantName")
                         .IsRequired()
@@ -92,9 +89,8 @@ namespace Disaster_Response_System.Migrations
                     b.Property<decimal>("EvaluationScore")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("RequestStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("RequestActive")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("RoundID")
                         .HasColumnType("uniqueidentifier");
@@ -140,9 +136,7 @@ namespace Disaster_Response_System.Migrations
 
                     b.HasOne("Round", "Round")
                         .WithMany("Donations")
-                        .HasForeignKey("RoundID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoundID");
 
                     b.Navigation("Donor");
 

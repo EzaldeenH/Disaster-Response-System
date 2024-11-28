@@ -19,10 +19,6 @@ builder.Services.AddDbContext<DisasterResponseSystemDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DisasterResponseSystemDBContext"))
            .UseLazyLoadingProxies());
 
-// Inject our Repositories
-builder.Services.AddScoped<IDonationRepository, SQLDonationRepository>();
-builder.Services.AddScoped<IDonorRepository, SQLDonorRepository>();
-builder.Services.AddScoped<IRoundRepository, SQLRoundRepository>();
 
 // Inject our Generic Repository
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -30,6 +26,10 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 // Inject our Services
 builder.Services.AddScoped<EvaluationService>();
 builder.Services.AddScoped<DistributeFundsService>();
+builder.Services.AddScoped<IRoundService, RoundService>();
+builder.Services.AddScoped<IDonationService, DonationService>();
+builder.Services.AddScoped<IDonorService, DonorService>();
+builder.Services.AddScoped<IRequestService, RequestService>();
 
 // Inject our automapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));

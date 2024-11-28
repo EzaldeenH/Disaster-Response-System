@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Disaster_Response_System.CustomActionFilter;
-using Disaster_Response_System.Data;
-using Disaster_Response_System.Models.Domain;
 using Disaster_Response_System.Models.DTO;
-using Disaster_Response_System.Repositories;
-using Microsoft.AspNetCore.Http;
+using Disaster_Response_System.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Disaster_Response_System.Controllers
 {
@@ -14,82 +13,58 @@ namespace Disaster_Response_System.Controllers
     [ApiController]
     public class RequestController : ControllerBase
     {
-        private readonly DisasterResponseSystemDBContext _dbContext;
-        private readonly IMapper mapper;
-        private readonly IGenericRepository<Request> requestRepository;
-        private readonly EvaluationService evaluationService;
+        private readonly IRequestService _requestService;
 
-        public RequestController(DisasterResponseSystemDBContext _dbContext, IMapper mapper, IGenericRepository<Request> requestRepository, EvaluationService evaluationService)
+        public RequestController(IRequestService requestService)
         {
-            this._dbContext = _dbContext;
-            this.mapper = mapper;
-            this.requestRepository = requestRepository;
-            this.evaluationService = evaluationService;
+            _requestService = requestService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var requestDomain = await requestRepository.GetAllAsync();
-            return Ok(mapper.Map<List<RequestDTO>>(requestDomain));
+            var requests = await _requestService.GetAllRequestsAsync();
+            return Ok(requests);
         }
 
-        [HttpGet]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> GetById([FromRoute] Guid id)
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var requestDomain = await requestRepository.GetByIdAsync(id);
-
-            if (requestDomain == null)
+            var request = await _requestService.GetRequestByIdAsync(id);
+            if (request == null)
             {
                 return NotFound();
             }
-
-            return Ok(mapper.Map<RequestDTO>(requestDomain));
+            return Ok(request);
         }
 
         [HttpPost]
         [ValidateModel]
         public async Task<IActionResult> Create([FromBody] RequestFormDTO requestDTO)
         {
-            var activeRound = await _dbContext.Rounds.FirstOrDefaultAsync(r => r.RoundActive);
-
-            if (activeRound == null)
+            try
+            {
+                await _requestService.AddRequestAsync(requestDTO);
+                return Ok();
+            }
+            catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
             }
-
-            int evaluation = evaluationService.CalculateScore(mapper.Map<RequestForm>(requestDTO));
-
-            var requestDomain = new Request
-            {
-                ApplicantName = requestDTO.Name,
-                RequestActive = true,
-                Round = activeRound,
-                SubmissionDate = DateTime.UtcNow,
-                EvaluationScore = evaluation,
-
-            };
-
-            await requestRepository.CreateAsync(requestDomain);
-            return CreatedAtAction(nameof(GetById), new { id = requestDomain.RequestID }, mapper.Map<RequestDTO>(requestDomain));
         }
 
-      
-
-        [HttpDelete]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var requestDomain = await requestRepository.GetByIdAsync(id);
-
-            if (requestDomain == null)
+            try
+            {
+                await _requestService.DeleteRequestAsync(id);
+                return Ok();
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            await requestRepository.DeleteAsync(id);
-            return Ok();
         }
     }
 }

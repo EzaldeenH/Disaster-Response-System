@@ -17,7 +17,7 @@ namespace Disaster_Response_System.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -40,7 +40,7 @@ namespace Disaster_Response_System.Migrations
 
                     b.HasKey("DonorID");
 
-                    b.ToTable("Donors", (string)null);
+                    b.ToTable("Donors");
                 });
 
             modelBuilder.Entity("Donation", b =>
@@ -67,7 +67,7 @@ namespace Disaster_Response_System.Migrations
 
                     b.HasIndex("RoundID");
 
-                    b.ToTable("Donations", (string)null);
+                    b.ToTable("Donations");
                 });
 
             modelBuilder.Entity("Request", b =>
@@ -78,10 +78,6 @@ namespace Disaster_Response_System.Migrations
 
                     b.Property<decimal>("AllocatedFunds")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ApplicantContact")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ApplicantName")
                         .IsRequired()
@@ -103,7 +99,7 @@ namespace Disaster_Response_System.Migrations
 
                     b.HasIndex("RoundID");
 
-                    b.ToTable("Requests", (string)null);
+                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("Round", b =>
@@ -124,7 +120,7 @@ namespace Disaster_Response_System.Migrations
 
                     b.HasKey("RoundID");
 
-                    b.ToTable("Rounds", (string)null);
+                    b.ToTable("Rounds");
                 });
 
             modelBuilder.Entity("Donation", b =>

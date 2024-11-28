@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Disaster_Response_System.CustomActionFilter;
-using Disaster_Response_System.Data;
-using Disaster_Response_System.Models.Domain;
 using Disaster_Response_System.Models.DTO;
-using Disaster_Response_System.Repositories;
+using Disaster_Response_System.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Disaster_Response_System.Controllers
 {
@@ -13,60 +13,66 @@ namespace Disaster_Response_System.Controllers
     [ApiController]
     public class DonorController : ControllerBase
     {
-        private readonly DisasterResponseSystemDBContext _dbContext;
-        private readonly IMapper mapper;
-        private readonly IGenericRepository<Donor> donorRepository;
+        private readonly IDonorService _donorService;
 
-        public DonorController(DisasterResponseSystemDBContext _dbContext, IMapper mapper, IGenericRepository<Donor> donorRepository)
+        public DonorController(IDonorService donorService)
         {
-            this._dbContext = _dbContext;
-            this.mapper = mapper;
-            this.donorRepository = donorRepository;
+            _donorService = donorService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var donors = await donorRepository.GetAllAsync();
-            return Ok(mapper.Map<List<DonorDTO>>(donors));
+            var donors = await _donorService.GetAllDonorsAsync();
+            return Ok(donors);
         }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var donor = await donorRepository.GetByIdAsync(id);
+            var donor = await _donorService.GetDonorByIdAsync(id);
             if (donor == null)
             {
                 return NotFound();
             }
-            return Ok(mapper.Map<DonorDTO>(donor));
+            return Ok(donor);
         }
 
         [HttpPost]
         [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddDonorDTO donorDTO)
         {
-            var donor = mapper.Map<Donor>(donorDTO);
-            await donorRepository.CreateAsync(donor);
-            return CreatedAtAction(nameof(GetById), new { id = donor.DonorID }, mapper.Map<DonorDTO>(donor));
+            await _donorService.AddDonorAsync(donorDTO);
+            return Ok();
         }
 
         [HttpPut("{id:guid}")]
         [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] AddDonorDTO donorDTO)
         {
-            var donor = await donorRepository.GetByIdAsync(id);
-
-            if (donor == null)
+            try
+            {
+                await _donorService.UpdateDonorAsync(id, donorDTO);
+                return Ok();
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
+        }
 
-            donor.Name = donorDTO.Name;
-            donor.Organization = donorDTO.Organization;
-
-            await donorRepository.UpdateAsync(donor);
-            return Ok();
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await _donorService.DeleteDonorAsync(id);
+                return Ok();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }
