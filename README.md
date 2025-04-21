@@ -1,1 +1,1 @@
-Note: the fornt and backend are in seperate branches
+Note: the front and backend are in seperate branches
