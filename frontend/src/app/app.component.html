@@ -1,0 +1,19 @@
+<header>
+  <app-header />
+</header>
+<main>
+  @if(!isAddingRequest){
+    <app-hero-section (requestPage)="onRequestForm()"/>
+    <router-outlet name="popup"/>
+    <app-faq />
+    <app-donation />
+    <app-news />
+  }
+  @else {
+    <app-request-form (onRequestFinished)="onCloseRequestForm()"/>
+  }
+</main>
+<footer>
+  <app-footer />
+</footer>
+

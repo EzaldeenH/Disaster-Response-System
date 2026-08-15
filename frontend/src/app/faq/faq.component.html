@@ -1,0 +1,28 @@
+<main class="disaster-relief">
+  <section class="image-gallery">
+    <img
+      src="https://cdn.builder.io/api/v1/image/assets/TEMP/ac728c8cd417b24d842192b12ddddd3e47a41548caf7c5262423f3c06364f531?placeholderIfAbsent=true&apiKey=2f36e2efe42e42d790f21c572913143a"
+      alt="Disaster relief efforts"
+      class="main-image"
+    />
+    <div class="secondary-images">
+      <img
+        src="https://cdn.builder.io/api/v1/image/assets/TEMP/806b131b42d08fb6305ea3c1ef9c0952acd4868798ed42bb48c6741b7d1be91e?placeholderIfAbsent=true&apiKey=2f36e2efe42e42d790f21c572913143a"
+        alt="Community support"
+        class="secondary-image"
+      />
+      <img
+        src="https://cdn.builder.io/api/v1/image/assets/TEMP/d8d3ed6a3f28236381f461350c2d36c9dd3285c4ef38c1b4159592b31b44aaee?placeholderIfAbsent=true&apiKey=2f36e2efe42e42d790f21c572913143a"
+        alt="Volunteer work"
+        class="secondary-image"
+      />
+    </div>
+  </section>
+
+  <section class="info-cards">
+    <article *ngFor="let card of cards" class="info-card">
+      <p class="card-description">{{ card.title }}</p>
+      <button class="learn-more-btn">{{ card.buttonText }}</button>
+    </article>
+  </section>
+</main>
