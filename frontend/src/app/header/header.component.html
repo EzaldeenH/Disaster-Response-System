@@ -18,6 +18,13 @@
             >
               {{ item.label }}
             </button>
+          } @else if (item.route) {
+            <a
+              [routerLink]="item.route"
+              class="block rounded-md px-4 py-2 text-sm font-bold text-highlight drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] transition-colors hover:text-white"
+            >
+              {{ item.label }}
+            </a>
           } @else {
             <a
               href="#"

@@ -4,22 +4,27 @@
 <!-- Header is absolute-positioned to overlay the hero -->
 <app-header />
 
-<main class="flex flex-1 flex-col">
-  <app-hero-section />
-  <app-impact-stats />
-  <app-mission />
-  <app-faq />
-  <app-donation />
-  <app-testimonials />
-  <app-news />
-</main>
+<!-- Routed pages render here -->
+@if (router.url === '/big-feature') {
+  <router-outlet />
+} @else {
+  <main class="flex flex-1 flex-col">
+    <app-hero-section />
+    <app-impact-stats />
+    <app-mission />
+    <app-faq />
+    <app-donation />
+    <app-testimonials />
+    <app-news />
+  </main>
 
-<footer>
-  <app-footer />
-</footer>
+  <footer>
+    <app-footer />
+  </footer>
 
-<!-- Modal layer: PrimeNG p-dialogs driven by ModalService signals -->
-<app-request-form />
-<app-donor-form />
-<app-donation-form />
-<app-request-status />
+  <!-- Modal layer: PrimeNG p-dialogs driven by ModalService signals -->
+  <app-request-form />
+  <app-donor-form />
+  <app-donation-form />
+  <app-request-status />
+}

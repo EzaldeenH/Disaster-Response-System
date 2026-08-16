@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 
 import { AlertBarComponent } from './alert-bar/alert-bar.component';
 import { HeaderComponent } from './header/header.component';
@@ -21,6 +22,7 @@ import { ModalService } from './modal.service';
   selector: 'app-root',
   standalone: true,
   imports: [
+    RouterOutlet,
     AlertBarComponent,
     HeaderComponent,
     HeroComponent,
@@ -40,4 +42,5 @@ import { ModalService } from './modal.service';
 })
 export class AppComponent {
   readonly modal = inject(ModalService);
+  readonly router = inject(Router);
 }
