@@ -1,12 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { RouterLink } from '@angular/router';
 
 import { ModalService } from '../modal.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ButtonModule],
+  imports: [ButtonModule, RouterLink],
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit {
@@ -18,6 +19,7 @@ export class HeaderComponent implements OnInit {
   navItems = [
     { label: 'Home', icon: 'pi pi-home', active: true },
     { label: 'Review Request', action: () => this.modal.open('request-status') },
+    { label: 'THE BIG FEATURE', route: '/big-feature' },
     { label: 'About Us' },
     { label: 'Blog' },
     { label: 'Contact Us' },
