@@ -1,5 +1,5 @@
-/** Development environment. Used by `ng serve` (local dev with Kestrel HTTPS). */
+/** Development environment. Used by `ng serve` (local dev with Kestrel HTTP on port 5139). */
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:7240/api',
+  apiUrl: 'http://localhost:5139/api',
 };

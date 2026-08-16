@@ -39,7 +39,7 @@ export class DonorFormComponent {
   }
 
   set visible(value: boolean) {
-    if (!value) {
+    if (!value && this.modal.isOpen('donor-registration')) {
       this.modal.close();
     }
   }

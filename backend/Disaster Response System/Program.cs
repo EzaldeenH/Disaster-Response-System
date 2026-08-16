@@ -1,7 +1,8 @@
 using Disaster_Response_System.Data;
+using Disaster_Response_System.Extensions;
 using Disaster_Response_System.Mappings;
 using Disaster_Response_System.Repositories;
-using Disaster_Response_System.Services; // Add this line to include the services namespace
+using Disaster_Response_System.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -38,34 +39,38 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
     });
 
+// CORS: configurable via Cors__AllowedOrigins env var.
+// Falls back to localhost for local dev if not set.
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder => builder
-            .WithOrigins("http://localhost:4200")
+        policy => policy
+            .WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [])
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Swagger is enabled in all environments so it is reachable on deployed hosts.
+app.UseSwagger();
+app.UseSwaggerUI();
 
-// Apply the CORS policy
-app.UseCors("AllowSpecificOrigin");
-
+// HTTPS redirection is only needed when running the app directly (local dev).
+// In containers, TLS is terminated at Traefik, so redirecting here would break requests.
 if (app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
 
+// Apply the CORS policy
+app.UseCors("AllowSpecificOrigin");
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Apply EF Core migrations on startup so the DB schema is created automatically.
+app.MigrateDatabase();
 
 app.Run();

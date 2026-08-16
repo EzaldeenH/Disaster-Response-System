@@ -44,8 +44,8 @@ namespace Disaster_Response_System.Controllers
         {
             try
             {
-                await _requestService.AddRequestAsync(requestDTO);
-                return Ok();
+                var id = await _requestService.AddRequestAsync(requestDTO);
+                return Ok(new { requestID = id });
             }
             catch (UnauthorizedAccessException)
             {

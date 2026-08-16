@@ -66,7 +66,7 @@ export class RequestFormComponent implements OnInit {
   }
 
   set visible(value: boolean) {
-    if (!value) {
+    if (!value && this.modal.isOpen('request-form')) {
       this.modal.close();
     }
   }

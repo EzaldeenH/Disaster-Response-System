@@ -1,14 +1,22 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS base
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+# ICU for full globalization support (dates, cultures, etc.)
+RUN apk add --no-cache icu-libs
+
+# Disable the invariant mode (set in base image)
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+ENV ASPNETCORE_URLS=http://+:80
+
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
 COPY ["Disaster Response System/Disaster Response System.csproj", "Disaster Response System/"]
 RUN dotnet restore "Disaster Response System/Disaster Response System.csproj"
+
 COPY . .
 WORKDIR "/src/Disaster Response System"
 RUN dotnet build "./Disaster Response System.csproj" -c $BUILD_CONFIGURATION -o /app/build

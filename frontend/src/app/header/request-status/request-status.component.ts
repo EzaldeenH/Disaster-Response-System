@@ -28,7 +28,7 @@ export class RequestStatusComponent implements AfterViewInit {
   }
 
   set visible(value: boolean) {
-    if (!value) {
+    if (!value && this.modal.isOpen('request-status')) {
       this.modal.close();
     }
   }

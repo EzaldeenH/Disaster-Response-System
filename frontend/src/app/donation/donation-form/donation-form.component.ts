@@ -38,7 +38,7 @@ export class DonationFormComponent {
   }
 
   set visible(value: boolean) {
-    if (!value) {
+    if (!value && this.modal.isOpen('donation-form')) {
       this.modal.close();
     }
   }
