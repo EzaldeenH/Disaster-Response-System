@@ -1,0 +1,66 @@
+# Docker Compose for Dokploy deployment.
+# Uses dokploy-network (external) so Traefik can route traffic.
+# Domains are assigned via Dokploy UI (Domains tab → dice icon for free traefik.me URL).
+#
+# Usage in Dokploy:
+#   1. Create a Compose application, point at this file (docker-compose.dokploy.yml)
+#   2. Set env vars in Dokploy: DB_PWD, CORS_ORIGIN
+#   3. Deploy
+#   4. Assign domains via Dokploy UI:
+#      - frontend: container port 80, path /
+#      - backend:  container port 80, path /api (optional, for Swagger access)
+#   5. Update CORS_ORIGIN to the frontend's traefik.me URL
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Disaster Response System/Dockerfile
+    expose:
+      - "80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DisasterResponseSystemDBContext=Server=db;Database=DisasterResponseSystem;User Id=sa;Password=${DB_PWD};TrustServerCertificate=True
+      - Cors__AllowedOrigins__0=${CORS_ORIGIN}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    networks:
+      - dokploy-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    expose:
+      - "80"
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - dokploy-network
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DB_PWD}
+    volumes:
+      - drs-db-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$MSSQL_SA_PASSWORD -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: always
+    networks:
+      - dokploy-network
+
+volumes:
+  drs-db-data:
+
+networks:
+  dokploy-network:
+    external: true
