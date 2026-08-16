@@ -34,7 +34,7 @@ namespace Disaster_Response_System.Services
             return _mapper.Map<RequestDTO>(request);
         }
 
-        public async Task AddRequestAsync(RequestFormDTO requestDTO)
+        public async Task<Guid> AddRequestAsync(RequestFormDTO requestDTO)
         {
             var activeRound = await _roundRepository.GetAllAsync();
             var round = activeRound.FirstOrDefault(r => r.RoundActive);
@@ -56,6 +56,7 @@ namespace Disaster_Response_System.Services
             };
 
             await _requestRepository.CreateAsync(request);
+            return request.RequestID;
         }
 
         public async Task DeleteRequestAsync(Guid id)

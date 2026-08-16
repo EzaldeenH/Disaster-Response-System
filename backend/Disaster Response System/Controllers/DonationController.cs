@@ -41,8 +41,8 @@ namespace Disaster_Response_System.Controllers
         [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddDonationDTO donationDTO)
         {
-                await _donationService.AddDonationAsync(donationDTO);
-                return Ok();
+                var id = await _donationService.AddDonationAsync(donationDTO);
+                return Ok(new { donationID = id });
         }
     }
 }

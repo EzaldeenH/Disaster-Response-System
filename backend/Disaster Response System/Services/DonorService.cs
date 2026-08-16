@@ -31,10 +31,11 @@ namespace Disaster_Response_System.Services
             return _mapper.Map<DonorDTO>(donor);
         }
 
-        public async Task AddDonorAsync(AddDonorDTO donorDTO)
+        public async Task<Guid> AddDonorAsync(AddDonorDTO donorDTO)
         {
             var donor = _mapper.Map<Donor>(donorDTO);
             await _donorRepository.CreateAsync(donor);
+            return donor.DonorID;
         }
 
         public async Task UpdateDonorAsync(Guid id, AddDonorDTO donorDTO)

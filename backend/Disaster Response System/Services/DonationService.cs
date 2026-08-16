@@ -37,7 +37,7 @@ namespace Disaster_Response_System.Services
             return _mapper.Map<DonationDTO>(donation);
         }
 
-        public async Task AddDonationAsync(AddDonationDTO donationDTO)
+        public async Task<Guid> AddDonationAsync(AddDonationDTO donationDTO)
         {
             var donor = await _donorRepository.GetByIdAsync(donationDTO.Donor);
             var activeRound = (await _roundRepository.GetAllAsync()).FirstOrDefault(r => r.RoundActive);
@@ -56,6 +56,7 @@ namespace Disaster_Response_System.Services
             };
 
             await _donationRepository.CreateAsync(donation);
+            return donation.DonationID;
         }
     }
 }

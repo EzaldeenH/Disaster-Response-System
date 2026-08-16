@@ -10,7 +10,7 @@ namespace Disaster_Response_System.Services
     {
         Task<IEnumerable<RequestDTO>> GetAllRequestsAsync();
         Task<RequestDTO> GetRequestByIdAsync(Guid id);
-        Task AddRequestAsync(RequestFormDTO requestDTO);
+        Task<Guid> AddRequestAsync(RequestFormDTO requestDTO);
         Task DeleteRequestAsync(Guid id);
         int CalculateScore(RequestForm request);
     }

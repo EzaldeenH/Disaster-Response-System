@@ -42,8 +42,8 @@ namespace Disaster_Response_System.Controllers
         [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddDonorDTO donorDTO)
         {
-            await _donorService.AddDonorAsync(donorDTO);
-            return Ok();
+            var id = await _donorService.AddDonorAsync(donorDTO);
+            return Ok(new { donorID = id });
         }
 
         [HttpPut("{id:guid}")]

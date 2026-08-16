@@ -9,7 +9,7 @@ namespace Disaster_Response_System.Services
     {
         Task<IEnumerable<DonationDTO>> GetAllDonationsAsync();
         Task<DonationDTO> GetDonationByIdAsync(Guid id);
-        Task AddDonationAsync(AddDonationDTO donationDTO);
+        Task<Guid> AddDonationAsync(AddDonationDTO donationDTO);
     }
 }
 
