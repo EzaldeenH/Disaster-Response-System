@@ -1,33 +1,40 @@
-import {AfterViewInit, Component, output} from '@angular/core';
-import {DonationFormComponent} from "./donation-form/donation-form.component";
-import {RouterLink} from "@angular/router";
+import { Component, inject } from '@angular/core';
+
+import { ModalService } from '../modal.service';
 
 @Component({
   selector: 'app-donation',
   standalone: true,
-  imports: [
-    DonationFormComponent,
-    RouterLink
-  ],
+  imports: [],
   templateUrl: './donation.component.html',
-  styleUrl: './donation.component.css'
 })
-export class DonationComponent implements AfterViewInit {
-  link = '';
-  test = output<null>();
+export class DonationComponent {
+  private readonly modal = inject(ModalService);
 
-  ngAfterViewInit() {
-    const donorID = localStorage.getItem('donorID');
+  readonly amounts = ['$25', '$50', '$100', '$250'];
 
-    if (donorID) {
-      this.link = "donation-form";
-    }
-    else {
-      this.link = "donor-registration";
-    }
+  /** Static fundraising goal — gives the section a "we're not done yet" tension. */
+  readonly goal = 1_200_000;
+  readonly raised = 847_000;
+
+  get raisedFormatted(): string {
+    return '$' + this.raised.toLocaleString('en-US');
   }
 
-  onDonation() {
-    this.test.emit(null);
+  get goalFormatted(): string {
+    return '$' + this.goal.toLocaleString('en-US');
+  }
+
+  get progressPercent(): number {
+    return Math.round((this.raised / this.goal) * 100);
+  }
+
+  onDonate(): void {
+    const donorID = localStorage.getItem('donorID');
+    this.modal.open(donorID ? 'donation-form' : 'donor-registration');
+  }
+
+  onQuickDonate(): void {
+    this.onDonate();
   }
 }

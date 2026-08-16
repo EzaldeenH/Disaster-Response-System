@@ -1,0 +1,47 @@
+<section class="bg-bg px-6 py-24 md:px-10 md:py-32">
+  <div class="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
+    <!-- Image -->
+    <div class="relative order-2 lg:order-1">
+      <div class="overflow-hidden rounded-lg border border-border">
+        <img
+          src="assets/aid-work_opt-1024x490.jpg"
+          alt="Aid workers delivering supplies on the ground"
+          class="h-full w-full object-cover"
+        />
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div class="order-1 flex flex-col gap-6 lg:order-2">
+      <span class="text-xs font-semibold uppercase tracking-[0.25em] text-highlight">Our Mission</span>
+      <h2 class="font-display text-4xl font-bold leading-tight text-text sm:text-5xl">
+        On the Ground When It Matters Most
+      </h2>
+      <p class="text-lg leading-relaxed text-text-muted">
+        Helping Hands is a volunteer-driven disaster response organization.
+        Since 2018, we've worked alongside local communities to deliver
+        emergency shelter, medical care, and essential supplies to families
+        affected by natural disasters — from earthquakes to floods to
+        hurricanes.
+      </p>
+      <p class="leading-relaxed text-text-muted">
+        We believe aid should be fast, dignified, and direct. Every dollar
+        raised goes toward resources on the ground, not overhead.
+      </p>
+
+      <div class="mt-4 flex flex-col gap-5">
+        @for (pillar of pillars; track pillar.title) {
+          <div class="flex items-start gap-4">
+            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-white/10 text-highlight">
+              <i [class]="pillar.icon" class="text-base"></i>
+            </div>
+            <div>
+              <h3 class="font-display text-base font-semibold text-text">{{ pillar.title }}</h3>
+              <p class="text-sm text-text-muted">{{ pillar.text }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

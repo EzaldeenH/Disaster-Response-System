@@ -24,8 +24,6 @@ builder.Services.AddDbContext<DisasterResponseSystemDBContext>(options =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // Inject our Services
-builder.Services.AddScoped<EvaluationService>();
-builder.Services.AddScoped<DistributeFundsService>();
 builder.Services.AddScoped<IRoundService, RoundService>();
 builder.Services.AddScoped<IDonationService, DonationService>();
 builder.Services.AddScoped<IDonorService, DonorService>();
@@ -58,10 +56,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
 // Apply the CORS policy
 app.UseCors("AllowSpecificOrigin");
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 

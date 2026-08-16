@@ -1,50 +1,69 @@
-import {Component, DestroyRef, inject, viewChild} from '@angular/core';
-import {FormsModule, NgForm} from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
-import {Router} from "@angular/router";
+import { Component, DestroyRef, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { MessageModule } from 'primeng/message';
+
+import { ModalService } from '../../modal.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-donation-form',
   standalone: true,
   imports: [
-    FormsModule
+    ReactiveFormsModule,
+    DialogModule,
+    ButtonModule,
+    InputNumberModule,
+    MessageModule,
   ],
   templateUrl: './donation-form.component.html',
-  styleUrl: './donation-form.component.css'
 })
 export class DonationFormComponent {
-  private destroyRef = inject(DestroyRef);
-  private form = viewChild.required<NgForm>('form');
-  private httpClient = inject(HttpClient);
+  private readonly fb = inject(FormBuilder);
+  private readonly http = inject(HttpClient);
+  private readonly modal = inject(ModalService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  constructor(private router: Router) {}
+  readonly form = this.fb.nonNullable.group({
+    amount: [null as number | null, [Validators.required, Validators.min(1)]],
+  });
 
-  onSubmit() {
-    if (this.form().valid) {
-      const donationData = {
-        donationAmount: this.form().value.amount,
-        donor: localStorage.getItem('donorID')
-      };
-
-      // Post the donation data to the server
-      const subscription = this.httpClient.post('https://localhost:7240/api/Donation', donationData).subscribe({
-        next: (response) => {
-          console.log('Donation data submitted successfully', response);
-          this.router.navigate(['/']);
-        },
-        error: (error) => {
-          console.error('Error submitting donation data', error);
-        },
-      });
-
-      this.destroyRef.onDestroy(() => {
-        subscription.unsubscribe();
-      });
-    }
-
+  get visible(): boolean {
+    return this.modal.isOpen('donation-form');
   }
 
-  onCancel() {
-    this.router.navigate(['/']);
+  set visible(value: boolean) {
+    if (!value) {
+      this.modal.close();
+    }
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const payload = {
+      donationAmount: this.form.controls.amount.value,
+      donor: localStorage.getItem('donorID'),
+    };
+
+    this.http
+      .post(`${environment.apiUrl}/Donation`, payload)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => this.modal.close(),
+        error: (error) => console.error('Error submitting donation data', error),
+      });
+  }
+
+  onCancel(): void {
+    this.modal.close();
   }
 }

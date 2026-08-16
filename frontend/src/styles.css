@@ -1,8 +1,214 @@
-* {
-  box-sizing: border-box;
+/* ============================================================
+   Helping Hands — Global Styles
+   Monochrome editorial theme: layered grays + white accent.
+
+   The palette extends the black-and-white hero across the app.
+   White is the primary accent (CTAs, hovers, focus rings); a
+   subtle warm off-white (--color-highlight) is reserved for
+   small labels/eyebrows so they stay distinct from white
+   headings without introducing a competing hue.
+
+   Change values in :root below to retheme the entire app
+   (PrimeNG components, Tailwind utilities and raw CSS all read
+   from these tokens).
+   ============================================================ */
+
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+
+:root {
+  /* Accent — white (the hero's accent) */
+  --color-accent: #ffffff;
+  --color-accent-hover: #e4e4e7;   /* zinc-200 */
+  --color-accent-active: #a1a1aa;  /* zinc-400 */
+  --color-accent-contrast: #0a0a0a; /* ink — white buttons get black text */
+  --color-accent-soft: rgba(255, 255, 255, 0.10);
+  --color-accent-glow: rgba(255, 255, 255, 0.12);
+
+  /* Highlight — subtle warm off-white for eyebrows/labels only */
+  --color-highlight: #f5f5f4;      /* stone-100 */
+  --color-highlight-soft: rgba(245, 245, 244, 0.12);
+
+  /* Layered dark grays — each section gets a distinct shade */
+  --color-ink: #0a0a0a;          /* deepest — hero, footer */
+  --color-ink-soft: #121212;     /* stats band */
+  --color-bg: #18181b;           /* main body bg (zinc-900) */
+  --color-surface: #1f1f23;      /* cards, raised surfaces (zinc-800-ish) */
+  --color-surface-muted: #27272a; /* hover states, inputs (zinc-800) */
+  --color-surface-elevated: #2a2a2e; /* elevated cards */
+  --color-border: #3f3f46;       /* borders (zinc-700) */
+
+  /* Text */
+  --color-text: #fafafa;         /* headings (zinc-50) */
+  --color-text-muted: #a1a1aa;   /* body (zinc-400) */
+  --color-text-subtle: #71717a;  /* captions (zinc-500) */
+
+  /* Urgency accent — single red used sparingly on live signals + primary CTAs */
+  --color-danger: #ef4444;            /* red-500 — alert bar, live dot, primary CTA, progress bar */
+  --color-danger-soft: rgba(239, 68, 68, 0.12);
+  --color-danger-glow: rgba(239, 68, 68, 0.50);
+  --color-success: #22c55e;
+
+  /* Typography */
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Radius */
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-active: var(--color-accent-active);
+  --color-accent-contrast: var(--color-accent-contrast);
+  --color-accent-soft: var(--color-accent-soft);
+
+  --color-highlight: var(--color-highlight);
+  --color-highlight-soft: var(--color-highlight-soft);
+
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-muted: var(--color-surface-muted);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-border: var(--color-border);
+
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-subtle: var(--color-text-subtle);
+
+  --color-danger: var(--color-danger);
+  --color-danger-soft: var(--color-danger-soft);
+  --color-danger-glow: var(--color-danger-glow);
+  --color-success: var(--color-success);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+}
+
+/* ----------  Urgency animations  ----------
+   Restrained: only the live dot, the primary CTA glow, and the
+   stat count-up use motion. All disabled under prefers-reduced-motion. */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.35; transform: scale(0.85); }
+}
+
+@keyframes cta-glow {
+  0%   { box-shadow: 0 0 0 0 var(--color-danger-glow); }
+  70%  { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.animate-pulse-dot { animation: pulse-dot 1.4s ease-in-out infinite; }
+.animate-cta-glow  { animation: cta-glow 2s ease-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-dot,
+  .animate-cta-glow {
+    animation: none !important;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+app-root {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
 body {
-  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ----------  PrimeNG dark overrides  ---------- */
+.p-dialog,
+.p-dialog .p-dialog-header,
+.p-dialog .p-dialog-content,
+.p-dialog .p-dialog-footer {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text) !important;
+}
+
+.p-dialog .p-dialog-header {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.p-dialog .p-dialog-title {
+  color: var(--color-text) !important;
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.p-inputtext,
+.p-select,
+.p-inputnumber-input,
+.p-textarea,
+.p-mention {
+  background-color: var(--color-surface-muted) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text) !important;
+}
+
+.p-inputtext::placeholder {
+  color: var(--color-text-subtle) !important;
+}
+
+.p-inputtext:hover,
+.p-select:hover {
+  border-color: var(--color-text-subtle) !important;
+}
+
+.p-inputtext:focus,
+.p-select:focus,
+.p-inputtext.p-focus,
+.p-select.p-focus {
+  border-color: var(--color-border) !important;
+  box-shadow: 0 0 0 1px var(--color-accent-glow) !important;
+}
+
+.p-select-overlay,
+.p-select-list {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text) !important;
+}
+
+.p-select-option:hover {
+  background-color: var(--color-surface-muted) !important;
+}
+
+.p-radiobutton .p-radiobutton-box {
+  background-color: var(--color-surface-muted) !important;
+  border-color: var(--color-border) !important;
+}
+
+.p-radiobutton.p-radiobutton-checked .p-radiobutton-box {
+  background-color: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
+  color: var(--color-accent-contrast) !important;
 }

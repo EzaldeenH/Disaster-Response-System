@@ -1,30 +1,30 @@
-import {Component, OnInit, output} from '@angular/core';
-import {RouterLink} from "@angular/router";
+import { Component, OnInit, inject } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
+
+import { ModalService } from '../modal.service';
 
 @Component({
   selector: 'app-hero-section',
   standalone: true,
-  imports: [
-    RouterLink
-  ],
+  imports: [ButtonModule],
   templateUrl: './hero.component.html',
-  styleUrl: './hero.component.css'
 })
 export class HeroComponent implements OnInit {
-  requestPage = output<void>();
-  previousRequestID : string | null = null;
+  private readonly modal = inject(ModalService);
+  protected previousRequestID: string | null = null;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.previousRequestID = window.localStorage.getItem('requestID');
   }
 
-
-  onRequestHelp() {
+  onRequestHelp(): void {
     if (!this.previousRequestID) {
-      this.requestPage.emit();
+      this.modal.open('request-form');
     }
-    else {
-      console.log('Request already submitted');
-    }
+  }
+
+  onDonate(): void {
+    const donorID = window.localStorage.getItem('donorID');
+    this.modal.open(donorID ? 'donation-form' : 'donor-registration');
   }
 }

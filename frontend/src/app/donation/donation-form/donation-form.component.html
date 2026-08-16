@@ -1,37 +1,36 @@
-<div class="backdrop" (click)="onCancel()">
-  <div class="form-container" (click)="$event.stopPropagation()">
-    <div class="form-header">
-      <h2>Donation Amount</h2>
+<p-dialog
+  [(visible)]="visible"
+  header="Donation Amount"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="w-full max-w-md "
+  [breakpoints]="{ '640px': '95vw' }"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-5 ">
+    <div class="flex flex-col gap-1.5">
+      <label for="amount" class="text-sm font-semibold text-text">Amount (USD)</label>
+      <p-inputNumber
+        inputId="amount"
+        formControlName="amount"
+        mode="currency"
+        currency="USD"
+        locale="en-US"
+        [min]="1"
+        [minFractionDigits]="0"
+        [maxFractionDigits]="2"
+        placeholder="0.00"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+      />
+      @if (form.controls.amount.invalid && form.controls.amount.touched) {
+        <p-message severity="error" size="small" text="Please enter a valid amount (min $1)." />
+      }
     </div>
 
-    <form #form="ngForm" class="form-container" (ngSubmit)="onSubmit()">
-
-      <div class="form-group">
-        <label for="amount">Amount (USD)</label>
-        <div class="input-container">
-          <span class="currency">$</span>
-          <input type="number"
-                 id="amount"
-                 name="amount"
-                 ngModel
-                 #amount="ngModel"
-                 required
-                 min="1"
-                 placeholder="0.00" />
-        </div>
-      </div>
-
-      <div class="submit-btn">
-        <button type="submit" [disabled]="form.invalid">Submit</button>
-      </div>
-
-      @if (amount.touched && amount.invalid && amount.dirty)
-      {
-        <div class="error">
-          Amount is required
-        </div>
-      }
-
-    </form>
-  </div>
-</div>
+    <div class="flex justify-end gap-3 pt-2">
+      <p-button label="Cancel" severity="secondary" [outlined]="true" type="button" (onClick)="onCancel()" />
+      <p-button label="Donate" icon="pi pi-heart" type="submit" [disabled]="form.invalid" />
+    </div>
+  </form>
+</p-dialog>

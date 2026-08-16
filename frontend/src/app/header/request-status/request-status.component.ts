@@ -1,55 +1,55 @@
-import {
-  Component,
-  inject,
-  signal,
-  AfterViewInit
-} from '@angular/core';
-import {FormsModule} from "@angular/forms";
-import {Router} from "@angular/router";
-import {HttpClient} from "@angular/common/http";
+import { Component, AfterViewInit, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { TagModule } from 'primeng/tag';
+import { MessageModule } from 'primeng/message';
+
+import { ModalService } from '../../modal.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-request-status',
   standalone: true,
-  imports: [
-    FormsModule
-  ],
+  imports: [DialogModule, ButtonModule, TagModule, MessageModule],
   templateUrl: './request-status.component.html',
-  styleUrl: './request-status.component.css'
 })
-export class RequestStatusComponent implements AfterViewInit{
-  requestID: any;
-  status = signal< null | string >(null);
-  error = 'No active request found';
-  private httpClient = inject(HttpClient);
-  private router = inject(Router);
+export class RequestStatusComponent implements AfterViewInit {
+  private readonly http = inject(HttpClient);
+  private readonly modal = inject(ModalService);
 
-  ngAfterViewInit() {
+  requestID: string | null = null;
+  readonly status = signal<string | null>(null);
+  readonly error = 'No active request found.';
+
+  get visible(): boolean {
+    return this.modal.isOpen('request-status');
+  }
+
+  set visible(value: boolean) {
+    if (!value) {
+      this.modal.close();
+    }
+  }
+
+  ngAfterViewInit(): void {
     this.requestID = window.localStorage.getItem('requestID');
     if (this.requestID) {
       this.getRequestStatus(this.requestID);
     }
   }
 
-  getRequestStatus(requestID: string) {
-    this.httpClient.get(`https://localhost:7240/api/Request/${requestID}`).subscribe({
+  getRequestStatus(requestID: string): void {
+    this.http.get(`${environment.apiUrl}/Request/${requestID}`).subscribe({
       next: (response: any) => {
-        if (response.requestActive) {
-          this.status.set('active');
-        }
-        console.log('Request status retrieved successfully', response);
+        this.status.set(response.requestActive ? 'active' : 'closed');
       },
-      error: (error) => {
-        console.error('Error retrieving request status', error);
-      }
+      error: (error) => console.error('Error retrieving request status', error),
     });
   }
 
-  onOk() {
-    this.router.navigate(['/']);
-  }
-
-  onCancel() {
-    this.router.navigate(['/']);
+  onOk(): void {
+    this.modal.close();
   }
 }

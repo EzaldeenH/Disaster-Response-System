@@ -1,10 +1,62 @@
-<section class="donate-container">
-  <div class="donate-content">
-    <h2 class="donate-title">Donate Now</h2>
-    <p class="donate-description">
-      Your generous contribution helps us provide essential resources and
-      support to those in need. Join us in making a difference today.
+<section class="border-y border-white/10 bg-ink px-6 py-24 md:px-10 md:py-32">
+  <div class="mx-auto flex max-w-4xl flex-col items-center text-center">
+    <i class="pi pi-heart-fill mb-6 text-5xl text-white/80"></i>
+    <h2 class="font-display text-4xl font-extrabold leading-tight text-white sm:text-5xl md:text-6xl">
+      Your Donation Saves Lives
+    </h2>
+    <p class="mt-6 max-w-xl text-lg leading-relaxed text-gray-300">
+      Your generous contribution helps us provide essential resources — food,
+      shelter, medical care — to those in need. Every dollar goes directly to
+      relief efforts on the ground.
     </p>
-    <button [routerLink]="[{ outlets: { popup: link } }]" class="donate-button">Donate</button>
+
+    <!-- Fundraising progress — red fill gives "we're not done yet" tension. -->
+    <div class="mt-12 w-full max-w-xl">
+      <div class="mb-2 flex items-baseline justify-between text-sm">
+        <span class="font-semibold text-white">
+          Raised <span class="text-danger">{{ raisedFormatted }}</span>
+        </span>
+        <span class="text-gray-400">Goal {{ goalFormatted }}</span>
+      </div>
+      <div class="h-2.5 w-full overflow-hidden rounded-full bg-white/10">
+        <div
+          class="h-full rounded-full bg-danger transition-[width] duration-1000 ease-out"
+          [style.width.%]="progressPercent"
+          role="progressbar"
+          [attr.aria-valuenow]="progressPercent"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
+      <p class="mt-2 text-xs font-medium uppercase tracking-wider text-gray-500">
+        {{ progressPercent }}% funded — we're not done yet
+      </p>
+    </div>
+
+    <!-- Quick amounts -->
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+      @for (amount of amounts; track amount) {
+        <button
+          class="rounded-md border-2 border-white/30 bg-white/5 px-6 py-3 text-lg font-bold text-white backdrop-blur transition-colors hover:border-white hover:bg-white hover:text-ink"
+          (click)="onQuickDonate()"
+        >
+          {{ amount }}
+        </button>
+      }
+    </div>
+
+    <div class="mt-10">
+      <button
+        class="animate-cta-glow inline-flex items-center gap-2 rounded-md bg-danger px-10 py-4 text-base font-semibold text-white transition-colors hover:bg-red-600"
+        (click)="onDonate()"
+      >
+        <i class="pi pi-heart text-sm"></i>
+        Donate Custom Amount
+      </button>
+    </div>
+
+    <p class="mt-6 text-sm text-gray-500">
+      100% of donations go directly to disaster relief. No overhead deducted.
+    </p>
   </div>
 </section>

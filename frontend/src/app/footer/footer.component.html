@@ -1,84 +1,52 @@
-
-<footer class="newsletter-footer">
-  <div class="newsletter-container">
-    <h2 class="newsletter-title">Subscribe to our newsletter</h2>
-    <form class="newsletter-form" (ngSubmit)="subscribeToNewsletter()">
-      <div class="input-wrapper">
-        <label for="emailInput" class="visually-hidden">Input your email</label>
+<footer class="bg-ink px-6 pb-8 pt-24 text-gray-300 md:px-10">
+  <div class="mx-auto max-w-6xl">
+    <!-- Newsletter -->
+    <div class="flex flex-col items-center gap-6 border-b border-white/10 pb-16 text-center">
+      <h2 class="font-display text-3xl font-bold text-white sm:text-4xl">Stay Informed</h2>
+      <p class="max-w-md text-sm text-gray-400">
+        Subscribe to receive updates on our relief efforts and how your support
+        is making an impact.
+      </p>
+      <form class="flex w-full max-w-md gap-2" (ngSubmit)="subscribeToNewsletter()">
         <input
+          pInputText
           type="email"
-          id="emailInput"
-          class="email-input"
-          placeholder="Input your email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="Enter your email"
           required
+          class="flex-1 !bg-white/5 !border-white/15 !text-white placeholder:!text-gray-500"
         />
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/8bd14a8d03eea3fc014a10d73f2d303b66030b86875bf52bdf5228cc57c7f308?placeholderIfAbsent=true&apiKey=2f36e2efe42e42d790f21c572913143a"
-          alt=""
-          class="email-icon"
-        />
+        <p-button label="Subscribe" type="submit" icon="pi pi-envelope" />
+      </form>
+    </div>
+
+    <!-- Brand + nav -->
+    <div class="flex flex-col items-center justify-between gap-8 py-12 md:flex-row">
+      <div class="flex items-center gap-3">
+        <i class="pi pi-hand-holding-heart text-2xl text-highlight"></i>
+        <span class="font-display text-xl font-bold text-white">Helping Hands</span>
       </div>
-      <button type="submit" class="subscribe-button">Subscribe</button>
-    </form>
-    <div class="footer-content">
-      <div class="brand-info">
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/b0b54e81d466efc8cf80d172abf0a143074ba39117777269db58406220092fd4?placeholderIfAbsent=true&apiKey=2f36e2efe42e42d790f21c572913143a"
-          alt="Helping Hands Logo"
-          class="brand-logo"
-        />
-        <h3 class="brand-name">Helping Hands</h3>
-      </div>
-      <nav class="footer-nav">
-        <a href="#about" class="footer-link">About us</a>
-        <a href="#help" class="footer-link">Help Center</a>
-        <a href="#contact" class="footer-link">Contact us</a>
-        <a href="#faq" class="footer-link">FAQs</a>
-        <a href="#careers" class="footer-link">Careers</a>
+      <nav class="flex flex-wrap justify-center gap-8 text-sm">
+        @for (link of footerLinks; track link.label) {
+          <a [href]="link.href" class="text-gray-400 transition-colors hover:text-white">{{ link.label }}</a>
+        }
       </nav>
     </div>
-    <img
-      src="https://cdn.builder.io/api/v1/image/assets/TEMP/0199fbba625644fdb02de84d6739fbce4f0d0214d45ea844c8f7358b7d584363?placeholderIfAbsent=true&apiKey=2f36e2efe42e42d790f21c572913143a"
-      alt=""
-      class="footer-divider"
-    />
-    <div class="footer-bottom">
-      <div class="language-selector">
-        <span>English</span>
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/33f9310c52c4721091c0f2a6eb233c13897981831d41d8e4142e9f10faef4f44?placeholderIfAbsent=true&apiKey=2f36e2efe42e42d790f21c572913143a"
-          alt="Language dropdown"
-          class="dropdown-icon"
-        />
-      </div>
-      <p class="copyright-text">
-        © 2024 Brand, Inc. • Privacy • Terms • Sitemap
-      </p>
-      <div class="social-links">
-        <a href="#" aria-label="Facebook"
-        ><img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/98fea571d2298b20330e680ff01a5a26002046a18832d5e9f7bd9feadb0e7acf?placeholderIfAbsent=true&apiKey=2f36e2efe42e42d790f21c572913143a"
-          alt=""
-          class="social-icon"
-        /></a>
-        <a href="#" aria-label="Twitter"
-        ><img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/d02dce659d29cab88366a2990b2f53f51b30aa6bfc08badccfc2c6f3a91f3e52?placeholderIfAbsent=true&apiKey=2f36e2efe42e42d790f21c572913143a"
-          alt=""
-          class="social-icon"
-        /></a>
-        <a href="#" aria-label="Instagram"
-        ><img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/bcd323587c9fb2325d2673a49dcb97f5600d25ecba9e6a47fc75048f1a59f3d2?placeholderIfAbsent=true&apiKey=2f36e2efe42e42d790f21c572913143a"
-          alt=""
-          class="social-icon"
-        /></a>
-        <a href="#" aria-label="LinkedIn"
-        ><img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8fc2a0cb80a307d6806a43d175087f81f734aa2fdc4b3152b482182c9720163?placeholderIfAbsent=true&apiKey=2f36e2efe42e42d790f21c572913143a"
-          alt=""
-          class="social-icon"
-        /></a>
+
+    <!-- Bottom bar -->
+    <div class="flex flex-col items-center justify-between gap-6 border-t border-white/10 pt-8 text-sm md:flex-row">
+      <p class="text-gray-500">© 2024 Helping Hands, Inc. • Privacy • Terms • Sitemap</p>
+      <div class="flex gap-3">
+        @for (social of socials; track social.label) {
+          <a
+            [href]="social.href"
+            [attr.aria-label]="social.label"
+            class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-gray-400 transition-colors hover:border-white hover:bg-white hover:text-ink"
+          >
+            <i [class]="social.icon"></i>
+          </a>
+        }
       </div>
     </div>
   </div>

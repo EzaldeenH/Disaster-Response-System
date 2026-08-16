@@ -1,148 +1,136 @@
-<form #form="ngForm" (ngSubmit)="onSubmit()">
-  <!-- Name -->
-  <label for="Name">Full Name</label>
-  <input type="text"
-         id="Name"
-         name="Name"
-         ngModel
-         #Name="ngModel"
-         required
-         minlength="3"
-         placeholder="Enter your full name" />
-  @if (Name.invalid && (Name.dirty || Name.touched)) {
-    <div class="error">Name is required.</div>
-    <div class="error">Name can't be less than 3 characters.</div>
-  }
+<p-dialog
+  [(visible)]="visible"
+  header="Request Aid"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="w-full max-w-2xl"
+  [breakpoints]="{ '640px': '95vw' }"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+    <!-- Name -->
+    <div class="flex flex-col gap-1.5">
+      <label for="Name" class="text-sm font-semibold text-text">Full Name</label>
+      <input pInputText id="Name" formControlName="Name" placeholder="Enter your full name" class="w-full" />
+      @if (form.controls.Name.invalid && (form.controls.Name.dirty || form.controls.Name.touched)) {
+        <p-message severity="error" size="small" text="Name is required (min 3 characters)." />
+      }
+    </div>
 
-  <!-- Adults Count -->
-  <label for="AdultCount">Number of Healthy Adults in the Household</label>
-  <input type="number"
-         id="AdultCount"
-         name="AdultCount"
-         ngModel
-         #AdultCount="ngModel"
-         required
-         min="1"
-         max="10"
-         placeholder="Enter the number of adults" />
-  @if (AdultCount.invalid && (AdultCount.dirty || AdultCount.touched)) {
-    <div class="error">Adult count is required.</div>
-    <div class="error">Adult number must be between 1 and 10.</div>
-  }
+    <!-- Household counts -->
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="flex flex-col gap-1.5">
+        <label for="AdultCount" class="text-sm font-semibold text-text">Healthy Adults</label>
+        <input pInputText type="number" id="AdultCount" formControlName="AdultCount" min="1" max="10" class="w-full" />
+        @if (form.controls.AdultCount.invalid && form.controls.AdultCount.touched) {
+          <p-message severity="error" size="small" text="Between 1 and 10." />
+        }
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label for="ChildCount" class="text-sm font-semibold text-text">Children</label>
+        <input pInputText type="number" id="ChildCount" formControlName="ChildCount" min="0" max="10" class="w-full" />
+        @if (form.controls.ChildCount.invalid && form.controls.ChildCount.touched) {
+          <p-message severity="error" size="small" text="Between 0 and 10." />
+        }
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label for="ElderlyCount" class="text-sm font-semibold text-text">Elderly</label>
+        <input pInputText type="number" id="ElderlyCount" formControlName="ElderlyCount" min="0" max="10" class="w-full" />
+        @if (form.controls.ElderlyCount.invalid && form.controls.ElderlyCount.touched) {
+          <p-message severity="error" size="small" text="Between 0 and 10." />
+        }
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label for="DisabilityCount" class="text-sm font-semibold text-text">Disabilities / Severe Conditions</label>
+        <input pInputText type="number" id="DisabilityCount" formControlName="DisabilityCount" min="0" max="10" class="w-full" />
+        @if (form.controls.DisabilityCount.invalid && form.controls.DisabilityCount.touched) {
+          <p-message severity="error" size="small" text="Between 0 and 10." />
+        }
+      </div>
+    </div>
 
-  <!-- Children Count -->
-  <label for="ChildCount">Number of Children in the Household</label>
-  <input type="number"
-         id="ChildCount"
-         name="ChildCount"
-         ngModel
-         #ChildCount="ngModel"
-         required
-         min="0"
-         max="10"
-         placeholder="Enter the number of children" />
-  @if (ChildCount.invalid && (ChildCount.dirty || ChildCount.touched)) {
-    <div class="error">Child count is required.</div>
-    <div class="error">Child number must be between 0 and 10.</div>
-  }
+    <!-- Housing status -->
+    <div class="flex flex-col gap-1.5">
+      <label for="HousingStatus" class="text-sm font-semibold text-text">Current Housing Situation</label>
+      <p-select
+        inputId="HousingStatus"
+        formControlName="HousingStatus"
+        [options]="housingOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Select a situation"
+        styleClass="w-full"
+      />
+      @if (form.controls.HousingStatus.invalid && form.controls.HousingStatus.touched) {
+        <p-message severity="error" size="small" text="Housing status is required." />
+      }
+    </div>
 
-  <!-- Elderly Count -->
-  <label for="ElderlyCount">Number of Elderly in the Household</label>
-  <input type="number"
-         id="ElderlyCount"
-         name="ElderlyCount"
-         ngModel
-         #ElderlyCount="ngModel"
-         required
-         min="0"
-         max="10"
-         placeholder="Enter the number of elderly" />
-  @if (ElderlyCount.invalid && (ElderlyCount.dirty || ElderlyCount.touched)) {
-    <div class="error">Elderly count is required.</div>
-    <div class="error">Elderly number must be between 0 and 10.</div>
-  }
+    <!-- Yes/No questions -->
+    <div class="flex flex-col gap-1.5">
+      <span class="text-sm font-semibold text-text">Do you have access to basic needs (food, water, electricity)?</span>
+      <div class="flex items-center gap-6">
+        @for (opt of yesNo; track opt.value) {
+          <div class="flex items-center gap-2">
+            <p-radioButton
+              [name]="'BasicNeedsAccess'"
+              [value]="opt.value"
+              formControlName="BasicNeedsAccess"
+              [inputId]="'BasicNeedsAccess-' + opt.value"
+            />
+            <label [for]="'BasicNeedsAccess-' + opt.value" class="text-sm font-medium text-text">{{ opt.label }}</label>
+          </div>
+        }
+      </div>
+      @if (form.controls.BasicNeedsAccess.invalid && form.controls.BasicNeedsAccess.touched) {
+        <p-message severity="error" size="small" text="This field is required." />
+      }
+    </div>
 
-  <!-- Disabilities or Medical Conditions -->
-  <label for="DisabilityCount">Number of People with Disabilities or Severe Medical Conditions</label>
-  <input type="number"
-         id="DisabilityCount"
-         name="DisabilityCount"
-         ngModel
-         #DisabilityCount="ngModel"
-         required
-         min="0"
-         max="10"
-         placeholder="Enter the number of people with disabilities" />
-  @if (DisabilityCount.invalid && (DisabilityCount.dirty || DisabilityCount.touched)) {
-    <div class="error">Disability count is required.</div>
-    <div class="error">Disability number must be between 0 and 10.</div>
-  }
+    <div class="flex flex-col gap-1.5">
+      <span class="text-sm font-semibold text-text">Do any family members have urgent medical needs?</span>
+      <div class="flex items-center gap-6">
+        @for (opt of yesNo; track opt.value) {
+          <div class="flex items-center gap-2">
+            <p-radioButton
+              [name]="'MedicalNeeds'"
+              [value]="opt.value"
+              formControlName="MedicalNeeds"
+              [inputId]="'MedicalNeeds-' + opt.value"
+            />
+            <label [for]="'MedicalNeeds-' + opt.value" class="text-sm font-medium text-text">{{ opt.label }}</label>
+          </div>
+        }
+      </div>
+      @if (form.controls.MedicalNeeds.invalid && form.controls.MedicalNeeds.touched) {
+        <p-message severity="error" size="small" text="This field is required." />
+      }
+    </div>
 
-  <!-- Housing Status -->
-  <label for="HousingStatus">Current Housing Situation</label>
-  <select id="HousingStatus"
-          name="HousingStatus"
-          ngModel
-          #HousingStatus="ngModel"
-          required>
-    <option value="intact">House intact, but experiencing financial difficulties</option>
-    <option value="damaged">House damaged, but inhabitable</option>
-    <option value="uninhabitable">House destroyed or uninhabitable</option>
-    <option value="homeless">Homeless</option>
-  </select>
-  @if (HousingStatus.invalid && (HousingStatus.dirty || HousingStatus.touched)) {
-    <div class="error">Housing status is required.</div>
-  }
+    <div class="flex flex-col gap-1.5">
+      <span class="text-sm font-semibold text-text">Do you need the funds for urgent needs (e.g. medical emergencies)?</span>
+      <div class="flex items-center gap-6">
+        @for (opt of yesNo; track opt.value) {
+          <div class="flex items-center gap-2">
+            <p-radioButton
+              [name]="'Urgency'"
+              [value]="opt.value"
+              formControlName="Urgency"
+              [inputId]="'Urgency-' + opt.value"
+            />
+            <label [for]="'Urgency-' + opt.value" class="text-sm font-medium text-text">{{ opt.label }}</label>
+          </div>
+        }
+      </div>
+      @if (form.controls.Urgency.invalid && form.controls.Urgency.touched) {
+        <p-message severity="error" size="small" text="This field is required." />
+      }
+    </div>
 
-  <!-- Access to Basic Needs -->
-  <label>Do you have access to basic needs (food, water, electricity)?</label>
-  <div class="radio-group">
-    <label>
-      Yes
-      <input type="radio" name="BasicNeedsAccess" #BasicNeeds="ngModel" ngModel required value="true">
-    </label>
-    <label>
-      No
-      <input type="radio" name="BasicNeedsAccess" #BasicNeeds="ngModel" ngModel required value="false">
-    </label>
-  </div>
-  @if (BasicNeeds.invalid && BasicNeeds.dirty) {
-    <div class="error">Basic needs access is required.</div>
-  }
-
-  <!-- Urgent Medical Needs -->
-  <label>Do any family members have urgent medical needs?</label>
-  <div class="radio-group">
-    <label>
-      Yes
-      <input type="radio" name="MedicalNeeds" #MedicalNeeds="ngModel" ngModel required value="true">
-    </label>
-    <label>
-      No
-      <input type="radio" name="MedicalNeeds" #MedicalNeeds="ngModel" ngModel required value="false">
-    </label>
-  </div>
-  @if (MedicalNeeds.invalid && MedicalNeeds.dirty) {
-    <div class="error">Medical needs is required.</div>
-  }
-
-  <!-- Urgency of Need -->
-  <label>Do you need the funds for urgent needs (e.g., medical emergencies)?</label>
-  <div class="radio-group">
-    <label>
-      Yes
-      <input type="radio" name="Urgency" #Urgency="ngModel" ngModel required value="true">
-    </label>
-    <label>
-      No
-      <input type="radio" name="Urgency" #Urgency="ngModel" ngModel required value="false">
-    </label>
-  </div>
-  @if (Urgency.invalid && Urgency.dirty) {
-    <div class="error">Urgency is required.</div>
-  }
-
-  <!-- Form Submission -->
-  <button type="submit" [disabled]="form.form.invalid || form.pristine">Submit</button>
-  <button type="button" (click)="onCancel()">Cancel</button>
-</form>
+    <!-- Actions -->
+    <div class="flex justify-end gap-3 pt-2">
+      <p-button label="Cancel" severity="secondary" [outlined]="true" type="button" (onClick)="onCancel()" />
+      <p-button label="Submit Request" icon="pi pi-send" type="submit" [disabled]="form.invalid" />
+    </div>
+  </form>
+</p-dialog>

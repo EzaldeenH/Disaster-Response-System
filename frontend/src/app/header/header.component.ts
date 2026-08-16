@@ -1,28 +1,38 @@
-import {Component, OnInit} from '@angular/core';
-import {RouterLink} from "@angular/router";
+import { Component, OnInit, inject } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
+
+import { ModalService } from '../modal.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [
-    RouterLink
-  ],
+  imports: [ButtonModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit {
-  donationLink = '';
+  private readonly modal = inject(ModalService);
 
-  ngOnInit() {
+  /** Which donation modal to open depends on whether a donor is registered. */
+  donationTarget: 'donor-registration' | 'donation-form' = 'donor-registration';
+
+  navItems = [
+    { label: 'Home', icon: 'pi pi-home', active: true },
+    { label: 'Review Request', action: () => this.modal.open('request-status') },
+    { label: 'About Us' },
+    { label: 'Blog' },
+    { label: 'Contact Us' },
+  ];
+
+  ngOnInit(): void {
     const donorID = localStorage.getItem('donorID');
-
-    if (donorID) {
-      this.donationLink = "donation-form";
-    }
-    else {
-      this.donationLink = "donor-registration";
-    }
+    this.donationTarget = donorID ? 'donation-form' : 'donor-registration';
   }
 
+  onReviewRequest(): void {
+    this.modal.open('request-status');
+  }
 
+  onDonate(): void {
+    this.modal.open(this.donationTarget);
+  }
 }

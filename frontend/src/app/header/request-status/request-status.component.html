@@ -1,18 +1,35 @@
-<div class="backdrop" (click)="onCancel()">
-  <div class="container">
-    <div>
-      <h2>Request Status</h2>
-      <span>{{ requestID }}</span>
-      <span class="status">{{ status() }}</span>
-    </div>
+<p-dialog
+  [(visible)]="visible"
+  header="Request Status"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="w-full max-w-md "
+  [breakpoints]="{ '640px': '95vw' }"
+>
+  <div class="flex flex-col gap-4 ">
+    @if (requestID) {
+      <div class="flex flex-col gap-1.5">
+        <span class="text-sm font-semibold text-text">Request ID</span>
+        <span class="rounded-md bg-surface-muted px-3 py-2 font-mono text-sm text-text">{{ requestID }}</span>
+      </div>
 
-    @if (status == null)
-    {
-      <span class="error" >{{ error }}</span>
-      }
+      <div class="flex flex-col gap-1.5">
+        <span class="text-sm font-semibold text-text">Status</span>
+        @if (status() === 'active') {
+          <p-tag value="Active" severity="success" icon="pi pi-check-circle" />
+        } @else if (status() === 'closed') {
+          <p-tag value="Closed" severity="warn" icon="pi pi-times-circle" />
+        } @else {
+          <p-tag value="Loading…" severity="info" icon="pi pi-spin pi-spinner" />
+        }
+      </div>
+    } @else {
+      <p-message severity="warn" [text]="error" />
+    }
 
-    <div class="ok-btn">
-      <button type="button" (click)="onOk()">OK</button>
+    <div class="flex justify-end pt-2">
+      <p-button label="OK" icon="pi pi-check" (onClick)="onOk()" />
     </div>
   </div>
-</div>
+</p-dialog>

@@ -1,41 +1,31 @@
-<!-- donor-form.component.html -->
-<div class="backdrop" (click)="onCancel()">
-  <div class="form-container" (click)="$event.stopPropagation()">
-    <div class="form-header">
-      <h2>Donor Registration</h2>
+<p-dialog
+  [(visible)]="visible"
+  header="Donor Registration"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="w-full max-w-md "
+  [breakpoints]="{ '640px': '95vw' }"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-5 ">
+    <div class="flex flex-col gap-1.5">
+      <label for="name" class="text-sm font-semibold text-text">Name</label>
+      <input pInputText id="name" formControlName="name" placeholder="Your full name" class="w-full" />
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+        <p-message severity="error" size="small" text="Name is required." />
+      }
     </div>
 
-  <form #form="ngForm" class="form-container" (ngSubmit)="onSubmit()">
-
-    <div class="form-group">
-      <label for="name">Name</label>
-      <input type="text"
-             id="name"
-             name="name"
-             ngModel
-             #name=ngModel
-             required/>
+    <div class="flex flex-col gap-1.5">
+      <label for="organization" class="text-sm font-semibold text-text">
+        Organization <span class="font-normal text-text-subtle">(optional)</span>
+      </label>
+      <input pInputText id="organization" formControlName="organization" placeholder="Organization you represent" class="w-full" />
     </div>
 
-    <div class="form-group">
-      <label for="organization">Organization (optional)</label>
-      <input type="text"
-             id="organization"
-             name="organization"
-             ngModel />
+    <div class="flex justify-end gap-3 pt-2">
+      <p-button label="Cancel" severity="secondary" [outlined]="true" type="button" (onClick)="onCancel()" />
+      <p-button label="Continue" icon="pi pi-arrow-right" type="submit" [disabled]="form.invalid" />
     </div>
-
-    <div class="submit-btn">
-      <button type="submit" [disabled]="form.invalid">Submit</button>
-    </div>
-
-    @if (name.touched && name.invalid && name.dirty)
-    {
-    <div class="error">
-      Name is required
-    </div>
-    }
-
   </form>
-  </div>
-</div>
+</p-dialog>

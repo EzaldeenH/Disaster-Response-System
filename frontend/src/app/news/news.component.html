@@ -1,19 +1,50 @@
-<section class="news-events-container">
-  <h2 class="section-title">News & Events</h2>
-  <div class="news-grid">
-    <article *ngFor="let item of newsItems" class="news-item">
-      <div class="news-content">
-        <h3 class="news-title">{{ item.title }}</h3>
-        <time class="news-date">{{ item.date }}</time>
-        <p class="news-description">{{ item.description }}</p>
-        <button
-          class="read-more-btn"
-          [attr.aria-label]="'Read more about ' + item.title"
-        >
-          Read More
-        </button>
+<section class="border-t border-border bg-surface-muted px-6 py-24 md:px-10 md:py-32">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-16 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+      <div class="max-w-2xl">
+        <span class="mb-4 block text-xs font-semibold uppercase tracking-[0.25em] text-highlight">
+          Latest Updates
+        </span>
+        <h2 class="font-display text-4xl font-bold text-text sm:text-5xl">News &amp; Events</h2>
+        <p class="mt-4 text-lg text-text-muted">
+          Reports from our teams on the ground. Real stories from the front
+          lines of disaster response.
+        </p>
       </div>
-      <img [src]="item.image" [alt]="item.title" class="news-image" />
-    </article>
+      <a href="#" class="flex items-center gap-2 text-sm font-semibold text-white transition-colors hover:text-gray-300">
+        View All Updates
+        <i class="pi pi-arrow-right text-xs"></i>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+      @for (item of newsItems; track item.title) {
+        <article class="group flex flex-col gap-5 rounded-lg border border-border bg-surface-elevated p-6 transition-all hover:border-white/40">
+          <div class="flex h-48 items-center justify-center overflow-hidden rounded-lg bg-ink">
+            <i class="pi pi-globe text-6xl text-white/20 transition-transform duration-500 group-hover:scale-110"></i>
+          </div>
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-3">
+              <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-highlight">
+                {{ item.category }}
+              </span>
+              <div class="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-text-subtle">
+                <i class="pi pi-calendar"></i>
+                <time>{{ item.date }}</time>
+              </div>
+            </div>
+            <h3 class="font-display text-2xl font-bold text-text transition-colors group-hover:text-white">{{ item.title }}</h3>
+            <p class="text-sm leading-relaxed text-text-muted">{{ item.description }}</p>
+            <button
+              class="flex items-center gap-2 self-start pt-2 text-sm font-semibold text-white transition-colors hover:text-gray-300"
+              [attr.aria-label]="'Read more about ' + item.title"
+            >
+              Read Full Story
+              <i class="pi pi-arrow-right text-xs"></i>
+            </button>
+          </div>
+        </article>
+      }
+    </div>
   </div>
 </section>

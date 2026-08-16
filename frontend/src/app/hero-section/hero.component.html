@@ -1,11 +1,57 @@
-<section class="hero-overlay">
-  <div class="hero-content">
-    <h1 class="hero-title">When Help is Needed The Most</h1>
-    <p class="hero-description">
-      Request aid from our community
+<section
+  class="relative flex min-h-screen items-center justify-center bg-ink"
+  style="background-image: url('assets/pexels-abedalbaset-15809173.jpg'); background-size: cover; background-position: center;"
+>
+  <!-- Dark gradient overlay — harder at top/bottom so the photo reads through -->
+  <div class="absolute inset-0 bg-gradient-to-b from-ink/80 via-ink/60 to-ink/95"></div>
+
+  <div class="relative z-10 flex max-w-4xl flex-col items-center px-6 py-24 text-center text-white">
+    <span class="mb-6 text-xs font-semibold uppercase tracking-[0.25em] text-highlight">
+      Disaster Response &amp; Relief
+    </span>
+    <h1 class="font-display text-5xl font-extrabold leading-[1.05] sm:text-6xl md:text-7xl">
+      Every Second<br />Counts.
+    </h1>
+    <p class="mt-8 max-w-xl text-lg font-light leading-relaxed text-gray-200 sm:text-xl">
+      Families affected by disasters need aid right now. Our volunteers and
+      donors are standing by — request help or give today.
     </p>
-    <button type="button" class="cta-button" (click)="onRequestHelp()">
-      Request Aid
-    </button>
+    <div class="mt-10 flex flex-col gap-4 sm:flex-row">
+      <p-button
+        label="Get Help Now"
+        icon="pi pi-bolt"
+        severity="secondary"
+        [outlined]="true"
+        size="large"
+        (onClick)="onRequestHelp()"
+        styleClass="!border-white/40 !text-white hover:!bg-white/10"
+      />
+      <p-button
+        label="Donate Now"
+        icon="pi pi-heart"
+        size="large"
+        (onClick)="onDonate()"
+        styleClass="font-semibold !bg-danger !border-danger !text-white hover:!bg-red-600 animate-cta-glow"
+      />
+    </div>
+
+    <!-- Response-time proof — pulled up from the mission section so time-sensitivity lives in the first viewport -->
+    <div class="mt-10 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-5 py-2 text-sm backdrop-blur">
+      <i class="pi pi-bolt text-danger"></i>
+      <span class="font-semibold text-white">48h</span>
+      <span class="text-gray-300">average response time</span>
+    </div>
+
+    @if (previousRequestID) {
+      <p class="mt-8 flex items-center gap-2 text-sm text-gray-300">
+        <i class="pi pi-info-circle text-accent"></i>
+        You already have an active request. Check its status from the header.
+      </p>
+    }
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60">
+    <i class="pi pi-chevron-down animate-bounce text-xl"></i>
   </div>
 </section>
