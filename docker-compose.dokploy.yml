@@ -1,15 +1,17 @@
 # Docker Compose for Dokploy deployment.
 # Uses dokploy-network (external) so Traefik can route traffic.
-# Domains are assigned via Dokploy UI (Domains tab → dice icon for free traefik.me URL).
+# Domains use nip.io free wildcard DNS (anything.158.158.72.65.nip.io → 158.158.72.65).
 #
 # Usage in Dokploy:
 #   1. Create a Compose application, point at this file (docker-compose.dokploy.yml)
 #   2. Set env vars in Dokploy: DB_PWD, CORS_ORIGIN
-#   3. Deploy
-#   4. Go to Domains tab → click dice icon to generate free traefik.me URLs:
-#      - frontend service: container port 80, path /
-#      - backend service:  container port 80, path /  (optional, for direct Swagger access)
-#   5. Copy the frontend URL and update CORS_ORIGIN to match, then redeploy
+#   3. CORS_ORIGIN should be http://drs-frontend.158.158.72.65.nip.io
+#   4. Deploy
+#
+# URLs after deploy:
+#   Frontend:  http://drs-frontend.158.158.72.65.nip.io
+#   Swagger:   http://drs-frontend.158.158.72.65.nip.io/swagger  (proxied via frontend nginx)
+#   Backend:   http://drs-backend.158.158.72.65.nip.io           (direct, for debugging)
 
 services:
   backend:
@@ -28,6 +30,11 @@ services:
     restart: always
     networks:
       - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.drs-backend.rule=Host(`drs-backend.158.158.72.65.nip.io`)"
+      - "traefik.http.routers.drs-backend.entrypoints=web"
+      - "traefik.http.services.drs-backend.loadbalancer.server.port=80"
 
   frontend:
     build:
@@ -40,6 +47,11 @@ services:
     restart: always
     networks:
       - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.drs-frontend.rule=Host(`drs-frontend.158.158.72.65.nip.io`)"
+      - "traefik.http.routers.drs-frontend.entrypoints=web"
+      - "traefik.http.services.drs-frontend.loadbalancer.server.port=80"
 
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
