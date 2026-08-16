@@ -1,0 +1,44 @@
+# Database-only Docker Compose for Dokploy.
+# The backend and frontend are deployed as separate Dokploy Applications
+# (Dockerfile mode), each with their own git integration and auto-deploy.
+#
+# This compose only provisions the SQL Server database on dokploy-network
+# so both applications can reach it by the service name "db".
+#
+# Usage in Dokploy:
+#   1. Create a Compose application, point at this file (docker-compose.db.yml)
+#   2. Set env var: DB_PWD
+#   3. Deploy
+#
+# Then deploy the apps separately as Dokploy Applications:
+#   - Backend: Dockerfile at backend/Disaster Response System/Dockerfile
+#       Env vars: DB_PWD, CORS_ORIGIN
+#       ConnectionStrings__DisasterResponseSystemDBContext=
+#         Server=db;Database=DisasterResponseSystem;User Id=sa;Password=${DB_PWD};TrustServerCertificate=True
+#   - Frontend: Dockerfile at frontend/Dockerfile
+#       No special env vars needed (apiUrl is baked into the Angular build)
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DB_PWD}
+    volumes:
+      - drs-db-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$MSSQL_SA_PASSWORD -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: always
+    networks:
+      - dokploy-network
+
+volumes:
+  drs-db-data:
+
+networks:
+  dokploy-network:
+    external: true
