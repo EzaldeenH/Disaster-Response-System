@@ -40,4 +40,6 @@ import { ModalService } from './modal.service';
 })
 export class AppComponent {
   readonly modal = inject(ModalService);
+
+  //test watch path
 }
