@@ -1,0 +1,66 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Disaster Response System/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DisasterResponseSystemDBContext=Server=db;Database=DisasterResponseSystem;User Id=sa;Password=${DB_PWD};TrustServerCertificate=True
+      - Cors__AllowedOrigins__0=${CORS_ORIGIN}
+    networks:
+      - dokploy-network
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.drs-backend.rule=Host(`drs-backend.158.158.72.65.nip.io`)"
+      - "traefik.http.routers.drs-backend.entrypoints=web"
+      - "traefik.http.services.drs-backend.loadbalancer.server.port=80"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - dokploy-network
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.drs-frontend.rule=Host(`drs-frontend.158.158.72.65.nip.io`)"
+      - "traefik.http.routers.drs-frontend.entrypoints=web"
+      - "traefik.http.services.drs-frontend.loadbalancer.server.port=80"
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DB_PWD}
+    volumes:
+      - drs-db-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$MSSQL_SA_PASSWORD -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - dokploy-network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+volumes:
+  drs-db-data:
+
+networks:
+  dokploy-network:
+    external: true
