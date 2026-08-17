@@ -1,5 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+
+interface DisasterRequest {
+  id: string;
+  title?: string;
+  status?: string;
+  location?: string;
+}
 
 @Component({
   selector: 'app-big-feature',
@@ -51,6 +60,53 @@ import { RouterLink } from '@angular/router';
           </div>
         </div>
 
+        <!-- PR PREVIEW DEMO: live API call to prove the preview includes PR changes -->
+        <div class="mt-16 rounded-lg border-2 border-dashed border-highlight bg-surface-muted p-8 text-left">
+          <h2 class="font-display text-xl font-bold text-highlight">
+            Live API call (PR preview demo)
+          </h2>
+          <p class="mt-2 text-sm text-text-muted">
+            Fetching disaster requests from
+            <code class="text-text">{{ apiUrl }}/request</code> —
+            if you can read this text and see data below, the Dokploy PR
+            preview is serving the PR's frontend build, not master.
+          </p>
+
+          @if (loading()) {
+            <p class="mt-4 text-sm text-text-muted">
+              <i class="pi pi-spin pi-spinner"></i> Loading requests…
+            </p>
+          }
+
+          @if (error()) {
+            <p class="mt-4 text-sm text-danger">
+              <i class="pi pi-exclamation-circle"></i>
+              Request failed: {{ error() }}
+              <span class="block text-text-subtle mt-1">
+                (Backend may be down in this preview — that's fine, the point
+                is the frontend code running here is from this PR.)
+              </span>
+            </p>
+          }
+
+          @if (requests().length > 0) {
+            <p class="mt-4 text-sm">
+              <span class="font-bold text-highlight">{{ requests().length }}</span>
+              request(s) returned from the backend:
+            </p>
+            <ul class="mt-2 list-disc pl-6 text-sm text-text-muted">
+              @for (req of requests(); track req.id) {
+                <li>
+                  <span class="text-text">{{ req.title || req.id }}</span>
+                  @if (req.status) {
+                    <span class="text-text-subtle"> — {{ req.status }}</span>
+                  }
+                </li>
+              }
+            </ul>
+          }
+        </div>
+
         <div class="mt-16 rounded-lg border-2 border-dashed border-border bg-surface-muted p-12">
           <p class="font-display text-2xl font-bold text-highlight">
             "I have seen the future of disaster response,
@@ -77,4 +133,30 @@ import { RouterLink } from '@angular/router';
   `,
   styles: ``,
 })
-export class BigFeatureComponent {}
+export class BigFeatureComponent implements OnInit {
+  private readonly http = inject(HttpClient);
+  readonly apiUrl = environment.apiUrl;
+
+  readonly loading = signal(false);
+  readonly error = signal<string | null>(null);
+  readonly requests = signal<DisasterRequest[]>([]);
+
+  ngOnInit(): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    // Mock-ish but real call: hits the backend's GET /api/request endpoint.
+    // If the backend isn't reachable in the preview, we surface the error —
+    // which still proves this code is running (i.e. the PR is deployed).
+    this.http.get<DisasterRequest[]>(`${this.apiUrl}/request`).subscribe({
+      next: (data) => {
+        this.requests.set(Array.isArray(data) ? data : []);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.error.set(err.message ?? 'Unknown error');
+        this.loading.set(false);
+      },
+    });
+  }
+}
